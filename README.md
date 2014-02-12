@@ -22,19 +22,18 @@ following servers are used to faciltate connections and provide a more stream
 lined user experience for users behind Network Address Translation (NAT)
 devices.
 
-* HTTP server - A Hypertext Transfer Protocol (HTTP) server responds with the
-   static files needed to run BubbleHash.
+* HTTP server - responds with the static files needed to run BubbleHash.
 * Signalling server - temporarily stores JSON data facilitating connections
    between peers.
-* STUN servers - Public Session Traversal Utilities for NAT (STUN) servers
-   enable peers to learn their public Internet Protocol (IP) addresses.
-* TURN server - Traversal Using Relays around NAT (TURN) servers act as relays
-   between peers if both peers are behind NAT devices.
+* STUN servers - enable peers to learn their public Internet Protocol (IP)
+   addresses.
+* TURN server - act as relays between peers if both peers are behind NAT
+   devices.
 
 ### Servers: HTTP
 
-The HTTP Server included as part of the BubbleHash protcol is based on Node.js.
-Any static HTTP server would work just as well.
+The Hypertext Transfer Protocol (HTTP) Server included as part of the BubbleHash
+protcol is based on Node.js.Any static HTTP server would work just as well.
 
 ### Servers: Signaling
 
@@ -47,7 +46,16 @@ to an ordinary URL.
 
 ### Servers: STUN
 
-## Servers: Client
+Session Traversal Utilities for NAT (STUN) servers provide IP address lookup for
+connecting clients so that they can determine how their IP address appears to
+the rest of the world.
+
+### Servers: TURN
+
+Traversal Using Relays around NAT (TURN) servers provide a relay in the case
+that two peers cannot connect due to both peers being behind a NAT device.
+
+## Client
 
 The client software is implemented in Javascript it uses the WebRTC API to
 establish peer-to-peer communication between clients.
