@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>BubbleHash</title>
+  <link type="text/css" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+  <link href='//fonts.googleapis.com/css?family=Lily+Script+One' rel='stylesheet' type='text/css'>
+  <link type="text/css" rel="stylesheet" href="./assets/styles/common.css">
+</head>
+
+<body>
+  <header class="jumbotron">
+    <div class="container">
+      <h1 class="bhFancyText">BubbleHash</h1>
+      <p class="lead">A distributed-hash-table implemeted using <a href="http://www.w3.org/TR/IndexedDB/" >IndexedDB</a> and <a href="http://www.w3.org/TR/webrtc/">WebRTC</a>.</p>
+      <a class="btn btn-primary btn-lg" role="button">Try It!</a>
+      <a class="btn btn-default btn-lg">Learn More</a>
+    </div><!-- /container -->
+  </header><!-- /jumbotron -->
+  <div class="container bhFeaturette">
+    <h2>Free your data!</h2>
+    <p class="lead">BubbleHash frees developers from the inefficient and costly server-client network topology.  Its designed to scale for any size website and any number of users.</p>
+    <hr>
+    <div class="row">
+      <div class="col-sm-4">
+        <h3>Peer-to-Peer</h3>
+        <p>BubbleHash uses the <a href="http://en.wikipedia.org/wiki/Chord_(peer-to-peer)">Chord</a> algorithm to distribute data between connected peers.</p>
+        <img src="http://upload.wikimedia.org/wikipedia/commons/2/20/Chord_network.png" alt="Chord model" class="bhBlockImage img-responsive">
+      </div><!-- /col-sm-4 -->
+      <div class="col-sm-4">
+        <h3>It's free!</h3>
+        <p>BubbleHash is released as open-source under an MIT user license.  Which means that anyone can use it for whatever thay want.</p>
+        <img src="http://opensource.org/files/osi_keyhole_600X600_90ppi.png" alt="Open Source Initiative Logo" class="bhBlockImage img-responsive">
+      </div><!-- /col-sm-4 -->
+      <div class="col-sm-4">
+        <h3>Supported Browsers</h3>
+        <p>BubbleHash uses the WebRTC and IndexedDB APIs two recent additions to the HTML5 specification.  Bubblehash is supported by the latest stable version of the following browsers.</p>
+        <div class="row">
+          <div class="col-xs-4 bhImageBadges">
+            <a href="https://www.google.com/intl/en/chrome/browser/"><img src="./assets/images/chrome.png" alt="Chrome"></a>
+          </div>
+          <div class="col-xs-4 bhImageBadges">
+            <a href="http://www.mozilla.org/en-US/firefox/"><img src="./assets/images/firefox.png" alt="Firefox"></a>
+          </div>
+          <div class="col-xs-4 bhImageBadges">
+            <a href="http://www.opera.com/"><img src="./assets/images/opera.png" alt="Opera"></a>
+          </div>
+        </div><!-- /row -->
+        <div class="row">
+          <div class="col-xs-4 bhImageBadges">
+            <a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>
+          </div>
+          <div class="col-xs-4 bhImageBadges">
+            <a href="http://www.mozilla.org/en-US/firefox/">Firefox</a>
+          </div>
+          <div class="col-xs-4 bhImageBadges">
+            <a href="http://www.opera.com/">Opera</a>
+          </div>
+        </div><!-- /row -->
+      </div><!-- /col-sm-4 -->
+    </div><!-- /row -->
+    <hr>
+    <p class="lead">BubbleHash is developed and maintained on Github by <a href="https://github.com/OX-Design">OX-Design</a></p>
+    <a href="https://github.com/twbs/bootstrap" class="btn btn-default btn-lg" role="button">BubbleHash on Github</a>
+  </div><!-- /container -->
+  <hr>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <p class="col-md-offset-2 col-md-8 bhFeaturette">BubbleHash was designed and developed by Hans Oksendahl (<a href="https://github.com/hansineffect">hansineffect</a>) of <a href="https://github.com/OX-Design">OX-Design</a>.</p>
+      </div>
+    </div>
+  </footer>
+  <!-- jQuery -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <!-- Twitter Bootstrap-->
+  <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./assets/scripts/log.js"></script>
+  <script type="text/javascript" src="./assets/scripts/xhr.js"></script>
+  <script type="text/javascript" src="./assets/scripts/rtc.js"></script>
+  <script type="text/javascript" src="./assets/scripts/common.js"></script>
+</body>
+
+</html>
