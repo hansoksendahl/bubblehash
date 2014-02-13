@@ -1,8 +1,0 @@
-{
-  "manifest_version": 1,
-  "name": "BubbleHash Manifest File",
-  "version": "1",
-  "permissions": [
-    "http://tinydb.org"
-  ]
-}
