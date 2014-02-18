@@ -44,7 +44,7 @@ pcOffer.call(function (description) {
   offer = description
 });
 
-function shareOffer = function () {
+function shareOffer () {
   bubblehash.xhr(commSilo+"/set/json")
     .data(description)
     .post(function () {
