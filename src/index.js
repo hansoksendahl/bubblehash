@@ -1,8 +1,8 @@
 import "preamble.js"
 import "preamble.ox.js"
-function bubblehash () {
+var bubblehash = (function bubblehash () {
 import "log/"
 bubblehash.logger = logger;
 import "xhr/"
 bubblehash.xhr = xhr;
-}
+}())
