@@ -42,7 +42,7 @@ comm.call(function (description) {
       .data(description)
       .post(function () {
         var data = (JSON.parse(this.responseText));
-        document.getElementById("offer").value = data.url;
+        $("#offer").val(data.url);
       })
 });
 
