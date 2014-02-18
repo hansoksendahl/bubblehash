@@ -1,0 +1,31 @@
+{
+  "name": "BubbleHash",
+  "version": "0.0.1",
+  "description": "A distributed-hash-table implemeted using IndexedDB and WebRTC.",
+  "main": "index.html",
+  "dependencies": {
+    "smash": "~0.0.12"
+  },
+  "devDependencies": {
+      "smash": "0.0.12",
+      "uglify-js": "2.4.12",
+      "js-beautify": "1.4.2"
+  },
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OX-Design/BubbleHash.git"
+  },
+  "keywords": [
+    "Chord",
+    "DHT",
+    "WebRTC",
+    "Javascript"
+  ],
+  "author": "Hans Oksendahl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OX-Design/BubbleHash/issues"
+  }
+}
