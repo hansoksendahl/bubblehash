@@ -1,10 +1,12 @@
-import "preamble.js"
-import "preamble.ox.js"
+import "preamble.js";
+import "preamble.ox.js";
 var bubblehash = (function bubblehash () {
   var out = {};
-import "log/"
+import "log/";
   out.logger = logger;
-import "xhr/"
+import "xhr/";
   out.xhr = xhr;
+import "rtc/";
+  out.rtc = rtc;
   return out;
 }())
