@@ -42,6 +42,7 @@ comm.call(function (description) {
       .data(description)
       .post(function () {
         var data = (JSON.parse(this.responseText));
+        console.log(data.url);
         $("#offer").val(data.url);
       })
 });
