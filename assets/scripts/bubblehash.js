@@ -51,7 +51,7 @@ var bubblehash = (function bubblehash() {
 
         return log;
     }
-    bubblehash.logger = logger;
+    out.logger = logger;
     // xhr
     var xhr = (function xhr() {
         var logMessages = {}, log;
@@ -141,5 +141,5 @@ var bubblehash = (function bubblehash() {
             return out;
         };
     }());
-    bubblehash.xhr = xhr;
+    out.xhr = xhr;
 }())
