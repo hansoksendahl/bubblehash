@@ -19,6 +19,7 @@
 //            BubbleHash is developed and maintained by OX-Design
 //                          MIT user license 2014
 var bubblehash = (function bubblehash() {
+    var out = {};
     // Log a message or error
     function logger(messages, prefix) {
         prefix = (prefix ? prefix + ": " : "");
