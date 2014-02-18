@@ -45,3 +45,5 @@ comm.call(function (description) {
         document.getElementById("offer").value = data.url;
       })
 });
+
+$("#offer").modal();
