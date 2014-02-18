@@ -142,4 +142,5 @@ var bubblehash = (function bubblehash() {
         };
     }());
     out.xhr = xhr;
+    return out;
 }())

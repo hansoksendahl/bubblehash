@@ -3,7 +3,8 @@ import "preamble.ox.js"
 var bubblehash = (function bubblehash () {
   var out = {};
 import "log/"
-out.logger = logger;
+  out.logger = logger;
 import "xhr/"
-out.xhr = xhr;
+  out.xhr = xhr;
+  return out;
 }())
