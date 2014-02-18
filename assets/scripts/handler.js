@@ -38,7 +38,7 @@ comm = bubblehash.rtc(commServer, commOptions);
 
 // Initialize a WebRTC offer.
 comm.call(function (description) {
-  xhr(signalServer+"/set/json")
+  bubblehash.xhr(signalServer+"/set/json")
       .data(description)
       .post(function () {
         var data = (JSON.parse(this.responseText));
