@@ -10,13 +10,16 @@ if (
 
 // Initialize variables used in the app
 var iface
-  , comm
   , commServer
   , commOptions
-  , signalServer;
+  , commSilo
+  , pcOffer
+  , offer
+  , answers
+  , offer;
 
-// Specify the signalling server
-signalServer = "http://mudb.org";
+// Specify the communications Silo
+commSilo = "http://mudb.org";
   
 // Specify the WebRTC ICE servers
 commServer = {
@@ -34,17 +37,20 @@ commOptions = {
 };
 
 // Create a new PeerConnection object
-comm = bubblehash.rtc(commServer, commOptions);
+pcOffer = bubblehash.rtc(commServer, commOptions);
 
 // Initialize a WebRTC offer.
-comm.call(function (description) {
-  bubblehash.xhr(signalServer+"/set/json")
-      .data(description)
-      .post(function () {
-        var data = (JSON.parse(this.responseText));
-        console.log(data.url);
-        $("#offerURL").val(data.url);
-      })
+pcOffer.call(function (description) {
+  offer = description
 });
 
-$("#offer").modal();
+function shareOffer = function () {
+  bubblehash.xhr(commSilo+"/set/json")
+    .data(description)
+    .post(function () {
+      var data = (JSON.parse(this.responseText));
+      $("#offerURL").val(data.url);
+    })
+}
+
+$("#createOrJoin").modal();
