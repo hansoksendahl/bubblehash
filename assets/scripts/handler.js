@@ -45,12 +45,13 @@ pcOffer.call(function (description) {
   shareOffer();
 });
 
-function shareOffer () {
+function shareOffer (callback) {
   bubblehash.xhr(commSilo+"/set/json")
     .data(offer)
     .post(function () {
       var data = (JSON.parse(this.responseText));
       $("#offerURL").val(data.url);
+      $("#showLocalOffer").modal();
     })
 }
 
