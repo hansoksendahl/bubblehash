@@ -9,13 +9,19 @@ if (
 }
 
 // Initialize variables used in the app
-var commServer
+var iFace
+  , commServer
   , commOptions
   , commSilo
   , pcOffer
   , offer
   , answers
   , offer;
+  
+// Create refercenes to all needed app interafce items.
+iFace.fldOffer = $("#fldOfferURL");
+iFace.btnHost = $("#btnHost");
+iFace.modLocalOffer = $("#modShowLocalOffer")
 
 // Specify the communications Silo
 commSilo = "http://mudb.org";
@@ -48,15 +54,15 @@ function shareOffer (callback) {
     .data(offer)
     .post(function () {
       var data = (JSON.parse(this.responseText));
-      $("#offerURL").val(data.url);
-      $("#showLocalOffer").modal();
-      $("#offerURL").focus();
+      iFace.fldOffer.val(data.url);
+      iFace.modLocalOffer.modal();
+      iFace.fldOffer.focus();
     });
 }
 
 // Make text selected on focus
-$("#offerURL").focus(function () {
+iFace.fldOffer.focus(function () {
   this.select();
 })
 
-$("#host").click(shareOffer);
+iFace.btnHost.click(shareOffer);

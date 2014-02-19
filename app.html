@@ -21,7 +21,7 @@
       </button>
       <a class="navbar-brand bhFancyText" href="./index.html">BubbleHash</a>
       <button type="button" class="btn btn-primary navbar-btn">Connect</button>
-      <button type="button" class="btn btn-default navbar-btn" id="host">Host</button>
+      <button type="button" class="btn btn-default navbar-btn" id="btnHost">Host</button>
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Search">
@@ -32,23 +32,23 @@
   </nav>
   <!-- /Navbar -->
   <!-- showLocalOffer -->
-  <div class="modal" id="showLocalOffer">
+  <div class="modal" id="modShowLocalOffer">
     <div class="modal-dialog">
       <div class="modal-content panel">
         <div class="modal-header">
           <h4 class="modal-title">Send your Offer URL to another peer</h4>
         </div>
         <div class="modal-body">
-          <p class="help-block">Send the shortened URL below to another peer to allow them to connect to your Bubble.</p>
+          <p class="help-block">Send the Offer URL below to another peer to allow them to connect to your Bubble.</p>
           <form class="">
             <div class="form-group">
               <label for="offerURL">Offer URL</label>
-              <input type="text" class="form-control" id="offerURL">
+              <input type="text" class="form-control" id="fldOfferURL">
             </div>
           </form>
         </div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-primary" id="create">Sent!</button>
+          <button type="button" class="btn btn-primary" id="btnCreate">Sent!</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div><!-- /.modal-content -->
