@@ -54,4 +54,9 @@ function shareOffer (callback) {
     });
 }
 
+// Make text selected on focus
+$("#offerURL").focus(function () {
+  this.select();
+})
+
 $("#host").click(shareOffer);
