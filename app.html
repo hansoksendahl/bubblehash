@@ -21,7 +21,7 @@
       </button>
       <a class="navbar-brand bhFancyText" href="./index.html">BubbleHash</a>
       <button type="button" class="btn btn-primary navbar-btn">Connect</button>
-      <button type="button" class="btn btn-default navbar-btn">Host</button>
+      <button type="button" class="btn btn-default navbar-btn" data-target="#showLocalOffer">Host</button>
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Search">
@@ -31,8 +31,21 @@
     </div>
   </nav>
   <!-- /Navbar -->
-
-
+  <!-- showLocalOffer -->
+  <div class="modal" id="showLocalOffer">
+    <div class="modal-dialog">
+      <div class="modal-content panel">
+        <div class="modal-header">
+          <h4 class="modal-title">Enable Connection</h4>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-primary" id="create">Sent!</button>
+          <button type="button" class="btn btn-default" data-dismiss="showLocalOffer">Cancel</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+  <!-- /showLocalOffer -->
   <!-- jQuery -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <!-- Twitter Bootstrap-->
