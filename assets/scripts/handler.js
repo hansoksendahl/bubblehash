@@ -54,4 +54,4 @@ function shareOffer () {
     })
 }
 
-$("#createOrJoin").modal();
+$("#host").click(shareOffer);
