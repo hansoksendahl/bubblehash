@@ -42,7 +42,6 @@ pcOffer = bubblehash.rtc(commServer, commOptions);
 // Initialize a WebRTC offer.
 pcOffer.call(function (description) {
   offer = description;
-  shareOffer();
 });
 
 function shareOffer (callback) {
