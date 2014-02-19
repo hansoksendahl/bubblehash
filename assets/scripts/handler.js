@@ -60,9 +60,13 @@ function shareOffer (callback) {
     });
 }
 
-// Make text selected on focus
-iFace.fldOffer.focus(function () {
+function select () {
   this.select();
-})
+}
+
+// Make text selected on focus
+iFace.fldOffer
+    .focus(select)
+    .mouseenter(select)
 
 iFace.btnHost.click(shareOffer);
