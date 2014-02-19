@@ -48,7 +48,7 @@ function shareOffer (callback) {
     .data(offer)
     .post(function () {
       var data = (JSON.parse(this.responseText));
-      $("#offerURL").val(data.url);
+      $("#offerURL").val(data.url).focus();
       $("#showLocalOffer").modal();
     });
 }
