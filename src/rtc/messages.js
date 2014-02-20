@@ -7,6 +7,7 @@ logMessages[0x0004] = "Setting remote description.";
 logMessages[0x2000] = "An error occured while setting the local description.";
 logMessages[0x2001] = "An error occured creating an offer.";
 logMessages[0x2002] = "An error occured creating an answer.";
+logMessages[0x2003] = "An error occured while creating the remote description.";
 logMessages[0x0010] = "Data channel opened.";
 logMessages[0x0011] = "Data channel message received.";
 logMessages[0x0012] = "Data channel closed.";
