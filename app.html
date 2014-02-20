@@ -20,47 +20,118 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand bhFancyText" href="./index.html">BubbleHash</a>
-      <button type="button" class="btn btn-primary navbar-btn">Connect</button>
-      <button type="button" class="btn btn-default navbar-btn" id="btnHost">Host</button>
+      <button type="button" class="btn btn-primary navbar-btn" id="btnJoin">Join</button>
+      <button type="button" class="btn btn-default navbar-btn" id="btnInvite">Invite</button>
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
+          <input type="text" class="form-control" placeholder="Search" disabled>
         </div>
-        <button type="submit" class="btn btn-default">Submit</button>
+        <button type="submit" class="btn btn-default" disabled>Submit</button>
       </form>
     </div>
   </nav>
   <!-- /Navbar -->
-  <!-- showLocalOffer -->
-  <div class="modal" id="modShowLocalOffer">
+  
+  <div class="modal" id="modLocalOffer">
     <div class="modal-dialog">
       <div class="modal-content panel">
         <div class="modal-header">
-          <h4 class="modal-title">Send your Offer URL to another peer</h4>
+          <h4 class="modal-title">Send an Invite to someone</h4>
         </div>
         <div class="modal-body">
-          <p class="help-block">Send the Offer URL below to another peer to allow them to connect to your Bubble.</p>
           <form class="">
             <div class="form-group">
-              <label for="offerURL">Offer URL</label>
-              <input type="text" class="form-control" id="fldOfferURL">
+              <label for="fldLocalOffer">Invite URL</label>
+              <input type="text" class="form-control" id="fldLocalOffer" readonly>
+              <p class="help-block small">Copy the Invite URL above and send it to another peer.</p>
             </div>
           </form>
-        </div>
+        </div><!-- /.modal-body -->
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-primary" id="btnCreate">Sent!</button>
+          <button type="button" class="btn btn-primary" id="btnCreateOffer" data-dismiss="modal">Sent!</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-  </div>
-  <!-- /showLocalOffer -->
+  </div><!-- /#modLocalOffer -->
+  
+  <div class="modal" id="modRemoteOffer">
+    <div class="modal-dialog">
+      <div class="modal-content panel">
+        <div class="modal-header">
+          <h4 class="modal-title">Enter the Invite that was sent to you</h4>
+        </div>
+        <div class="modal-body">
+          <form class="">
+            <div class="form-group">
+              <label for="fldRemoteOffer">Invite URL</label>
+              <input type="text" class="form-control" id="fldRemoteOffer">
+              <p class="help-block small">Enter the Invite URL of a host in the field above.</p>
+            </div>
+          </form>
+        </div><!-- /.modal-body -->
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-primary" id="btnCreateAnswer" data-dismiss="modal">RSVP!</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /#modRemoteOffer -->
+  
+  <div class="modal" id="modRemoteAnswer">
+    <div class="modal-dialog">
+      <div class="modal-content panel">
+        <div class="modal-header">
+          <h4 class="modal-title">Enter a RSVP that was sent to you</h4>
+        </div>
+        <div class="modal-body">
+          <form class="">
+            <div class="form-group">
+              <label for="fldRemoteAnswer">RSVP URL</label>
+              <input type="text" class="form-control" id="fldRemoteAnswer">
+              <p class="help-block small">Enter the RSVP URL of the peer you invited in the field above.</p>
+            </div>
+          </form>
+        </div><!-- /.modal-body -->
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-primary" id="btnAcceptAnswer">Done!</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /modRemoteAnswer -->
+  
+  <div class="modal" id="modLocalAnswer">
+    <div class="modal-dialog">
+      <div class="modal-content panel">
+        <div class="modal-header">
+          <h4 class="modal-title">Send a RSVP to the host</h4>
+        </div>
+        <div class="modal-body">
+          <form class="">
+            <div class="form-group">
+              <label for="fldLocalAnswer">RSVP URL</label>
+              <input type="text" class="form-control" id="fldLocalAnswer" readonly>
+              <p class="help-block small">Copy the Invite URL above and send it to another peer.</p>
+            </div>
+          </form>
+        </div><!-- /.modal-body -->
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-primary" id="btnCreate" data-dismiss="modal">Sent!</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /#modLocalAnswer -->
+  
+  <!-- Scripts -->
   <!-- jQuery -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <!-- Twitter Bootstrap-->
   <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="./assets/scripts/bubblehash.min.js"></script>
+  <script type="text/javascript" src="./assets/scripts/bubblehash.js"></script>
   <script type="text/javascript" src="./assets/scripts/handler.js"></script>
+  <!-- /Scripts -->
 </body>
 
 </html>

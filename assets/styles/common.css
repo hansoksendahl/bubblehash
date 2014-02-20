@@ -13,3 +13,7 @@
 .bhFeaturette {
   text-align: center;
 }
+
+*[readonly] {
+  cursor: auto!important;
+}
