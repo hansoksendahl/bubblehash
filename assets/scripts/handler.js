@@ -104,7 +104,7 @@ function setAnswer () {
     
     initPeer();
     
-    pc.answer(new RTCSessionDescription(data.sdp), function (description) {
+    pc.answer(new RTCSessionDescription(data.sdp, data.type), function (description) {
       bubblehash.xhr(commSilo+"/set/json")
         .data(description)
         .post(function () {
