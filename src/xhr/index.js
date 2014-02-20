@@ -13,8 +13,8 @@ import "messages"
       , headers = {}
       , data;
     
-    request.ontimeout = log(0x2000);
-    request.onerror = log(0x2001);
+    request.ontimeout = log.message(0x2000);
+    request.onerror = log.message(0x2001);
     
     // Send the request
     function send (type, callback) {

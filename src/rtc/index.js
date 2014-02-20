@@ -12,21 +12,22 @@ import "messages";
   // Create a logger callback object
   var log = logger(logMessages, "RTC")
   
+  function bindDataChannelEvents (channel) {
+    channel.onmessage = log.message(0x0011);
+    channel.onopen = log.message(0x0010);
+    channel.onerror = log.error(0x2010);
+    channel.onclose = log.message(0x0012);
+  }
+  
   // Initialize the connection
   return function init (server, options) {
     var connection = new peerConnection(server, options)
       , out = {}
-      , dataChannel
     
-    connection.ondatachannel = log(0x0000);
-    connection.createDataChannel("BH", { reliable: false });
+    // Expose the peer connection object
+    out.connection = connection;
+    
     connection.onicecandidate = addIceCandidate;
-    
-    // Initialize the data channel.
-    function dataChannel (event) {
-      dataChannel = event.channel
-      dataChannel.onmessage = message;
-    }
     
     // Parse messages send over the data channel.
     function message (event) {
@@ -44,30 +45,48 @@ import "messages";
     
     // Create an offer.
     function createOffer (success) {
-      success = success || log(0x0001);
+      // Expose the datachannel object
+      var datachannel = connection.createDataChannel("BH", { reliable: false });
+      
+      bindDataChannelEvents(datachannel);
+      
+      out.datachannel = datachannel;
+      
+      success = log.message(0x0001, success);
       connection.createOffer(success, log.error(0x2001), {mandatory: {OfferToReceiveVideo: false, OfferToReceiveAudio: false}});
     }
     
     // Create an answer.
     function createAnswer (success) {
-      success = success || log(0x0002);
+      connection.ondatachannel = function (event) {
+        var datachannel = event.channel;
+        
+        bindDataChannelEvents(datachannel);
+        
+        out.datachannel = datachannel;
+      }
+      
+      success = log.message(0x0002, success);
       connection.createAnswer(success, log.error(0x2002), {mandatory: {OfferToReceiveVideo: false, OfferToReceiveAudio: false}});
     }
     
     // Set the local description.
     function setLocalDescription (description, success) {
-      success = success || log(0x0003);
-      connection.setLocalDescription(description, function () { success(description) }, log.error(0x2000));
+      description = (typeof description === "string" ? JSON.parse(description) : description);
+      success = log.message(0x0003, success);
+      var dict = new sessionDescription(description);
+      connection.setLocalDescription(dict, function () { success(dict) }, log.error(0x2000));
     }
   
     // Set the remote description.
     function setRemoteDescription (description, success) {
       description = (typeof description === "string" ? JSON.parse(description) : description);
-      success = success || log(0x0004)
+      success = log.message(0x0004, success);
       var dict = new sessionDescription(description);
-      connection.setRemoteDescription(dict, function () { success(description) }, log.error(0x2003));
+      connection.setRemoteDescription(dict, function () { success(dict) }, log.error(0x2003));
     }
 
+import "open";
 import "call";
 import "answer";
     

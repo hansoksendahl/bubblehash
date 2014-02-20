@@ -29,8 +29,7 @@ var iFace = {}
   "btnJoin",
   "btnCreateOffer",
   "btnAcceptAnswer",
-  "btnCreateAnswer",
-  "btnAcceptOffer"
+  "btnCreateAnswer"
 ].forEach(function (e) {
   iFace[e] = $("#"+e);
 });
@@ -42,13 +41,32 @@ commSilo = "http://mudb.org";
 commServer = {
   iceServers: [
     {url: "stun:stun4.l.google.com:19302"},
-    {url: "turn:numb.viagenie.ca", username: "hansoksendahl@gmail.com", credential: "num0mg!!"}
+    {url: "stun:stun.l.google.com:19302"},
+    {url: "stun:stun1.l.google.com:19302"},
+    {url: "stun:stun2.l.google.com:19302"},
+    {url: "stun:stun3.l.google.com:19302"},
+    {url: "stun:stun01.sipphone.com"},
+    {url: "stun:stun.ekiga.net"},
+    {url: "stun:stun.fwdnet.net"},
+    {url: "stun:stun.ideasip.com"},
+    {url: "stun:stun.iptel.org"},
+    {url: "stun:stun.rixtelecom.se"},
+    {url: "stun:stun.schlund.de"},
+    {url: "stun:stunserver.org"},
+    {url: "stun:stun.softjoys.com"},
+    {url: "stun:stun.voiparound.com"},
+    {url: "stun:stun.voipbuster.com"},
+    {url: "stun:stun.voipstunt.com"},
+    {url: "stun:stun.voxgratia.org"},
+    {url: "stun:stun.xten.com"},
+    {url: "turn:numb.viagenie.ca:3478", username: "hansoksendahl@gmail.com", credential: "num0mg!!"}
   ]
 };
 
 // Specify the WebRTC options
 commOptions = {
   optional: [
+    {DtlsSrtpKeyAgreement: true},
     {RtpDataChannels: true}
   ]
 };
@@ -63,7 +81,7 @@ function setOffer () {
   initPeer();
   
   // Initialize a WebRTC offer.
-  pc.call(function (description) {
+  pc.open(function (description) {
     bubblehash.xhr(commSilo+"/set/json")
       .data(description)
       .post(function () {
@@ -85,8 +103,12 @@ function getAnswer () {
 
 // Establish the connection
 function acceptAnswer () {
-  var pcAnswer = bubblehash.rtc(commServer, commOptions);
-  
+  bubblehash.xhr(iFace.fldRemoteAnswer.val()).get(function () {
+    var data = JSON.parse(this.responseText);
+    
+    pc.answer(data);
+    iFace.modRemoteAnswer.modal("hide");
+  });
 }
 
 // Get the offer sent from a host
@@ -104,27 +126,28 @@ function setAnswer () {
     
     initPeer();
     
-    pc.answer(new RTCSessionDescription(data.sdp, data.type), function (description) {
+    // Initialize a WebRTC answer
+    pc.call(new RTCSessionDescription(data), function (description) {
       bubblehash.xhr(commSilo+"/set/json")
         .data(description)
         .post(function () {
             var data = JSON.parse(this.responseText);
-            console.log(data);
+            iFace.fldLocalAnswer.val(data.url);
+            iFace.modLocalAnswer.modal();
+            iFace.fldLocalAnswer.focus();
           });
         });
   });
-}
-
-// Check that the connection has been established
-function acceptOffer () {
-  
 }
 
 
 // Make text selected on focus
 iFace.fldLocalOffer
     .focus(function () { this.select(); })
-    .mouseup(function (){ return false; })
+    .mouseup(function () { return false; })
+iFace.fldLocalAnswer
+    .focus(function () { this.select(); })
+    .mouseup(function () { return false; })
 
 iFace.btnInvite.click(setOffer);
 iFace.btnJoin.click(getOffer);

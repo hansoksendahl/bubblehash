@@ -1,4 +1,4 @@
 // Log an error message
-log.error = function (code) {
-  return log(code, "error");
+out.error = function (code, callback) {
+  return logCode(code, "error", callback);
 };

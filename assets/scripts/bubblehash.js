@@ -24,32 +24,38 @@ var bubblehash = (function bubblehash() {
     function logger(messages, prefix) {
         prefix = (prefix ? prefix + ": " : "");
 
+        var out = {};
+
+        function log(type, message) {
+            console[type](message);
+        }
+
         // General function for creating log messages.
-        function log(code, type) {
-            return function(err) {
-                type = type || "log";
-                err = err || "";
+        function logCode(code, type, callback) {
+            var message = prefix + messages[code];
 
-                var message = prefix + messages[code];
-
-                if (err) {
-                    message += "\n\n" + err;
+            return function() {
+                log(type, message);
+                if (callback) {
+                    callback.apply(this, arguments);
                 }
-
-                console[type](message);
             };
         }
 
         // Log a warning message
-        log.warning = function(code) {
-            return log(code, "warning");
+        out.warning = function(code, callback) {
+            return logCode(code, "warning", callback);
         };
         // Log an error message
-        log.error = function(code) {
-            return log(code, "error");
+        out.error = function(code, callback) {
+            return logCode(code, "error", callback);
+        };
+        // Log a message
+        out.message = function(code, callback) {
+            return logCode(code, "log", callback);
         };
 
-        return log;
+        return out;
     }
     out.logger = logger;
     // xhr
@@ -67,8 +73,8 @@ var bubblehash = (function bubblehash() {
             var request = new XMLHttpRequest(),
                 out = {}, headers = {}, data;
 
-            request.ontimeout = log(0x2000);
-            request.onerror = log(0x2001);
+            request.ontimeout = log.message(0x2000);
+            request.onerror = log.message(0x2001);
 
             // Send the request
             function send(type, callback) {
@@ -152,97 +158,133 @@ var bubblehash = (function bubblehash() {
             ,
             logMessages = {};
 
+        // Various log messages used in the RTC stack
+        logMessages[0x0000] = "Data channel established.";
+        logMessages[0x0001] = "Creating an offer.";
+        logMessages[0x0002] = "Creating an answer.";
+        logMessages[0x0003] = "Setting local description.";
+        logMessages[0x0004] = "Setting remote description.";
+        logMessages[0x2000] = "An error occured while setting the local description.";
+        logMessages[0x2001] = "An error occured creating an offer.";
+        logMessages[0x2002] = "An error occured creating an answer.";
+        logMessages[0x0010] = "Data channel opened.";
+        logMessages[0x0011] = "Data channel message received.";
+        logMessages[0x0012] = "Data channel closed.";
+        logMessages[0x2010] = "Error on data channel."
 
         // Create a logger callback object
         var log = logger(logMessages, "RTC")
 
-        // Initialize the connection
-        return function init(server, options) {
-                var connection = new peerConnection(server, options),
-                    out = {}, dataChannel
+            function bindDataChannelEvents(channel) {
+                channel.onmessage = log.message(0x0011);
+                channel.onopen = log.message(0x0010);
+                channel.onerror = log.error(0x2010);
+                channel.onclose = log.message(0x0012);
+            }
 
-                    connection.ondatachannel = log(0x0000);
-                connection.createDataChannel("BH", {
+            // Initialize the connection
+        return function init(server, options) {
+            var connection = new peerConnection(server, options),
+                out = {}
+
+                // Expose the peer connection object
+            out.connection = connection;
+
+            connection.onicecandidate = addIceCandidate;
+
+            // Parse messages send over the data channel.
+            function message(event) {
+                var signal = JSON.parse(event.data);
+
+                console.log(signal);
+            }
+
+            // Add ICE candidates.
+            function addIceCandidate(event) {
+                if (event.candidate) {
+                    connection.addIceCandidate(event.candidate);
+                }
+            }
+
+            // Create an offer.
+            function createOffer(success) {
+                // Expose the datachannel object
+                var datachannel = connection.createDataChannel("BH", {
                     reliable: false
                 });
-                connection.onicecandidate = addIceCandidate;
 
-                // Initialize the data channel.
-                function dataChannel(event) {
-                    dataChannel = event.channel
-                    dataChannel.onmessage = message;
-                }
+                bindDataChannelEvents(datachannel);
 
-                // Parse messages send over the data channel.
-                function message(event) {
-                    var signal = JSON.parse(event.data);
+                out.datachannel = datachannel;
 
-                    console.log(signal);
-                }
-
-                // Add ICE candidates.
-                function addIceCandidate(event) {
-                    if (event.candidate) {
-                        connection.addIceCandidate(event.candidate);
+                success = log.message(0x0001, success);
+                connection.createOffer(success, log.error(0x2001), {
+                    mandatory: {
+                        OfferToReceiveVideo: false,
+                        OfferToReceiveAudio: false
                     }
-                }
-
-                // Create an offer.
-                function createOffer(success) {
-                    success = success || log(0x0001);
-                    connection.createOffer(success, log.error(0x2001), {
-                        mandatory: {
-                            OfferToReceiveVideo: false,
-                            OfferToReceiveAudio: false
-                        }
-                    });
-                }
-
-                // Create an answer.
-                function createAnswer(success) {
-                    success = success || log(0x0002);
-                    connection.createAnswer(success, log.error(0x2002), {
-                        mandatory: {
-                            OfferToReceiveVideo: false,
-                            OfferToReceiveAudio: false
-                        }
-                    });
-                }
-
-                // Set the local description.
-                function setLocalDescription(description, success) {
-                    success = success || log(0x0003);
-                    connection.setLocalDescription(description, function() {
-                        success(description)
-                    }, log.error(0x2000));
-                }
-
-                // Set the remote description.
-                function setRemoteDescription(description, success) {
-                    description = (typeof description === "string" ? JSON.parse(description) : description);
-                    success = success || log(0x0004)
-                    var dict = new sessionDescription(description);
-                    connection.setRemoteDescription(dict, function() {
-                        success(description)
-                    }, log.error(0x2003));
-                }
-
-                // Produce a WebRTC offer
-                out.call = function(callback) {
-                    createOffer(function(description) {
-                        setLocalDescription(description, callback);
-                    });
-                };
-                // Answer a WebRTC offer
-                out.answer = function(description, callback) {
-                    setRemoteDescription(description);
-                    createAnswer(function() {
-                        setLocalDescription(callback);
-                    })
-                }
-
-                return out;
+                });
             }
+
+            // Create an answer.
+            function createAnswer(success) {
+                connection.ondatachannel = function(event) {
+                    var datachannel = event.channel;
+
+                    bindDataChannelEvents(datachannel);
+
+                    out.datachannel = datachannel;
+                }
+
+                success = log.message(0x0002, success);
+                connection.createAnswer(success, log.error(0x2002), {
+                    mandatory: {
+                        OfferToReceiveVideo: false,
+                        OfferToReceiveAudio: false
+                    }
+                });
+            }
+
+            // Set the local description.
+            function setLocalDescription(description, success) {
+                description = (typeof description === "string" ? JSON.parse(description) : description);
+                success = log.message(0x0003, success);
+                var dict = new sessionDescription(description);
+                connection.setLocalDescription(dict, function() {
+                    success(dict)
+                }, log.error(0x2000));
+            }
+
+            // Set the remote description.
+            function setRemoteDescription(description, success) {
+                description = (typeof description === "string" ? JSON.parse(description) : description);
+                success = log.message(0x0004, success);
+                var dict = new sessionDescription(description);
+                connection.setRemoteDescription(dict, function() {
+                    success(dict)
+                }, log.error(0x2003));
+            }
+
+            // Produce a WebRTC offer
+            out.open = function(callback) {
+                createOffer(function(description) {
+                    setLocalDescription(description, callback);
+                });
+            };
+            // Answer a WebRTC offer
+            out.call = function(remoteDescription, callback) {
+                setRemoteDescription(remoteDescription);
+                createAnswer(function(localDescription) {
+                    setLocalDescription(localDescription);
+                    callback(localDescription);
+                })
+            }
+            out.answer = function(description) {
+                setRemoteDescription(description);
+            }
+
+            return out;
+        }
     }())
     out.rtc = rtc;
     return out;

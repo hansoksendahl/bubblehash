@@ -1,7 +1,3 @@
-// Answer a WebRTC offer
-out.answer = function (description, callback) {
+out.answer = function (description) {
   setRemoteDescription(description);
-  createAnswer(function () {
-    setLocalDescription(callback);
-  })
 }

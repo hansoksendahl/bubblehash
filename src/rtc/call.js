@@ -1,6 +1,8 @@
-// Produce a WebRTC offer
-out.call = function (callback) {
-  createOffer(function(description) {
-    setLocalDescription(description, callback);
-  });
-};
+// Answer a WebRTC offer
+out.call = function (remoteDescription, callback) {
+  setRemoteDescription(remoteDescription);
+  createAnswer(function (localDescription) {
+    setLocalDescription(localDescription);
+    callback(localDescription);
+  })
+}
