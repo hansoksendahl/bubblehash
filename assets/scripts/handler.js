@@ -127,7 +127,7 @@ function setAnswer () {
     initPeer();
     
     // Initialize a WebRTC answer
-    pc.call(new RTCSessionDescription(data), function (description) {
+    pc.call(data, function (description) {
       bubblehash.xhr(commSilo+"/set/json")
         .data(description)
         .post(function () {
