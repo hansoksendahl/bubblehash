@@ -78,7 +78,7 @@ pc = bubblehash.rtc(commServer, commOptions);
 
 // Create an Invite URL and show the local offer modal window
 function setOffer () {
-  dc = pc.createDataChannel(dataChannelName);
+  dc = pc.connection.createDataChannel(dataChannelName);
   
   // Initialize a WebRTC offer.
   pc.open(function (description) {
