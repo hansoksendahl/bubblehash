@@ -280,7 +280,7 @@ commSilo = "http://mudb.org";
 // Lease is 10 minutes on mudb
 leaseTime = 600000
 
-heartbeatTime = 10000
+heartbeatTime = 5000
 
 // Specify the WebRTC ICE servers
 server = {
