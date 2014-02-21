@@ -154,7 +154,7 @@ function setAnswer () {
 
 // Bind the messaging protcol to the data channel once established.
 function bindDataChannelHandlers (channel) {
-  channel.onopen = function () { console.log("Data channel opened.") };
+  channel.onopen = function () { iFace.modLocalAnswer.modal("hide") };
   channel.onclose = function () { console.log("Data channel closed.") };
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
