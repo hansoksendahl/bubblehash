@@ -8,6 +8,7 @@
 }
 
 #glfStatusOn {
+  display: none;
   color: yellowgreen;
 }
 

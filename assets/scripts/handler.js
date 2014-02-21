@@ -34,8 +34,7 @@ var iFace = {}
   "btnCreateOffer",
   "btnAcceptAnswer",
   "btnCreateAnswer",
-  "btnCancel",
-  "txtStatus"
+  "btnCancel"
 ].forEach(function (e) {
   iFace[e] = $("#"+e);
 });
@@ -177,7 +176,6 @@ function bindDataChannelHandlers (channel) {
     console.log("Data channel opened.");
     iFace.glfStatusOff.hide();
     iFace.glfStatusOn.show();
-    iFace.txtStatus.text("Connected")
     iFace.modLocalAnswer.modal("hide");
     
   };
@@ -185,7 +183,6 @@ function bindDataChannelHandlers (channel) {
     console.log("Data channel closed.");
     iFace.glfStatusOn.hide();
     iFace.glfStatusOff.show();
-    iFace.txtStatus.text("Not Connected")
   };
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
