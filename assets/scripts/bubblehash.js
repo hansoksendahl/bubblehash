@@ -450,7 +450,8 @@ function bindDataChannelHandlers(channel) {
         console.log("Data channel opened.");
         iFace.glfStatusOff.hide();
         iFace.glfStatusOn.show();
-        iFace.modLocalAnswer.modal("hide");
+        iFace.modLocalOffer.modal("hide");
+        iFace.modRemoteOffer.modal("hide");
 
     };
     channel.onclose = function() {
