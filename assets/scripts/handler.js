@@ -200,11 +200,11 @@ function bindDataChannelHandlers (channel) {
 // Make text selected on focus
 iFace.fldLocalOffer
     .focus(function () { this.select(); })
-    .mouseover(function () { this.select(); })
+    .mouseover(function () { this.focus(); return false; })
     .mouseup(function () { return false; })
 iFace.fldLocalAnswer
     .focus(function () { this.select(); })
-    .mouseover(function () { this.select(); })
+    .mouseover(function () { this.focus(); return false; })
     .mouseup(function () { return false; })
 
 iFace.navInvite.click(setOffer);
