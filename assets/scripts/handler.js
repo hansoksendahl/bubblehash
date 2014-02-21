@@ -189,7 +189,9 @@ function bindDataChannelHandlers (channel) {
     if (event.candidate) {
       pc.connection.addIceCandidate(event.candidate);
       
-      channel.send(JSON.stringify({type: "iceCandidace", candidate: event.candidate}));
+      if (dc.readyState === "open") {
+        dc.send(JSON.stringify({type: "iceCandidace", candidate: event.candidate}));
+      }
     }
   }
 }
