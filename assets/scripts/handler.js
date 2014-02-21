@@ -157,7 +157,7 @@ function setAnswer () {
 function bindDataChannelHandlers (channel) {
   channel.onopen = function () {
     console.log("Data channel opened.");
-    iFace.glfStatus.attr("class", "glyphicon glyphicon-ok-circle").css("color", "green");
+    iFace.glfStatus.attr("class", "glyphicon glyphicon-ok-circle").css("color", "GreenYellow");
     iFace.modLocalAnswer.modal("hide");
     
   };
