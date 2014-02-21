@@ -28,8 +28,8 @@ var iFace = {}
   "modLocalAnswer",
   "modRemoteOffer",
   "modRemoteAnswer",
-  "btnInvite",
-  "btnJoin",
+  "navInvite",
+  "navJoin",
   "btnCreateOffer",
   "btnAcceptAnswer",
   "btnCreateAnswer"
@@ -189,5 +189,5 @@ iFace.fldLocalAnswer
     .mouseover(function () { this.select(); })
     .mouseup(function () { return false; })
 
-iFace.btnInvite.click(setOffer);
-iFace.btnJoin.click(getOffer);
+iFace.navInvite.click(setOffer);
+iFace.navJoin.click(getOffer);
