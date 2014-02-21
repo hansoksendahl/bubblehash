@@ -13,7 +13,8 @@ var iFace = {}
   , commServer
   , commOptions
   , commSilo
-  , pc;
+  , pc
+  , dc
 
 // Create jQuery selectors for each of the following ids
 [
@@ -82,8 +83,6 @@ function setOffer () {
   
   // Initialize a WebRTC offer.
   pc.open(function (description) {
-    pc.datachannel.onmessage = messageHandler;
-    
     bubblehash.xhr(commSilo+"/set/json")
       .data(description)
       .post(function () {
@@ -140,6 +139,11 @@ function setAnswer () {
           });
         });
   });
+}
+
+// Bind message handler when datachannel is created
+pc.connection.ondatachannel = function () {
+  
 }
 
 // Bind the messaging protcol to the data channel once established.
