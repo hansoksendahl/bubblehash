@@ -159,7 +159,6 @@ function bindDataChannelHandlers (channel) {
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
   
-    
   // Add ICE candidates and share with peers
   pc.connection.onicecandidate = function (event) {
     if (event.candidate) {
@@ -174,11 +173,11 @@ function bindDataChannelHandlers (channel) {
 // Make text selected on focus
 iFace.fldLocalOffer
     .focus(function () { this.select(); })
-    .mouseenter(function () { this.select(); })
+    .mouseover(function () { this.select(); })
     .mouseup(function () { return false; })
 iFace.fldLocalAnswer
     .focus(function () { this.select(); })
-    .mouseenter(function () { this.select(); })
+    .mouseover(function () { this.select(); })
     .mouseup(function () { return false; })
 
 iFace.btnInvite.click(setOffer);
