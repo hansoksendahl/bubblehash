@@ -20,7 +20,7 @@ function logger (messages, prefix) {
         typeof e === "string")
       ) {
         alert("blah")
-        message += "\n\n"+e.stack
+        message += "\n\n"+(e.stack ? e.stack : e)
       }
       
       log(type, message);

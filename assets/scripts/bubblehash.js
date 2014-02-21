@@ -42,7 +42,7 @@ var bubblehash = (function bubblehash() {
                         typeof e === "string")
                 ) {
                     alert("blah")
-                    message += "\n\n" + e.stack
+                    message += "\n\n" + (e.stack ? e.stack : e)
                 }
 
                 log(type, message);
