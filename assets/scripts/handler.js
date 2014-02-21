@@ -15,6 +15,7 @@ var iFace = {}
   , commSilo
   , pc
   , dc
+  , dataChannelName = "BubbleHash";
 
 // Create jQuery selectors for each of the following ids
 [
@@ -77,6 +78,8 @@ pc = bubblehash.rtc(commServer, commOptions);
 
 // Create an Invite URL and show the local offer modal window
 function setOffer () {
+  dc = pc.createDataChannel(dataChannelName);
+  
   // Initialize a WebRTC offer.
   pc.open(function (description) {
     bubblehash.xhr(commSilo+"/set/json")
