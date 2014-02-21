@@ -88,7 +88,7 @@ function setOffer () {
         var data = JSON.parse(this.responseText);
         iFace.fldLocalOffer.val(data.url);
         iFace.modLocalOffer.modal();
-        iFace.fldLocalOffer.focus();
+        iFace.fldLocalOffer.val("").focus();
         iFace.btnCreateOffer.click(getAnswer);
       });
   });
@@ -97,7 +97,7 @@ function setOffer () {
 // Get the answer sent from a peer
 function getAnswer () {
   iFace.modRemoteAnswer.modal();
-  iFace.fldRemoteAnswer.focus();
+  iFace.fldRemoteAnswer.val("").focus();
   iFace.btnAcceptAnswer.click(acceptAnswer);
 }
 
@@ -114,7 +114,7 @@ function acceptAnswer () {
 // Get the offer sent from a host
 function getOffer () {
   iFace.modRemoteOffer.modal();
-  iFace.fldRemoteOffer.focus();
+  iFace.fldRemoteOffer.val("").focus();
   iFace.btnCreateAnswer.click(setAnswer);
 }
 
@@ -134,7 +134,7 @@ function setAnswer () {
             var data = JSON.parse(this.responseText);
             iFace.fldLocalAnswer.val(data.url);
             iFace.modLocalAnswer.modal();
-            iFace.fldLocalAnswer.focus();
+            iFace.fldLocalAnswer.val("").focus();
           });
         });
   });
