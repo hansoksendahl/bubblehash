@@ -13,7 +13,9 @@ function logger (messages, prefix) {
     var message = prefix+messages[code];
     
     return function (e) {
+      console.log(type, Object.prototype.toString.call(e), Object.prototype.toString.call(e).indexOf("Error"))
       if ((type === "error" || type === "warning") && Object.prototype.toString.call(e).indexOf("Error") !== -1) {
+        alert("blah")
         message += "\n\n"+e.stack
       }
       
