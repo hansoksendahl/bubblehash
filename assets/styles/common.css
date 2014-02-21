@@ -2,8 +2,13 @@
   font-family: 'Lily Script One', cursive;
 }
 
-#glfStatus {
-  color: gray;
+#glfStatusOff,
+#txtStatus {
+  color: lightgray;
+}
+
+#glfStatusOn {
+  color: yellowgreen;
 }
 
 .bhImageBadges {

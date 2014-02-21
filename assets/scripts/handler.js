@@ -19,7 +19,8 @@ var iFace = {}
 
 // Create jQuery selectors for each of the following ids
 [
-  "glfStatus",
+  "glfStatusOn",
+  "glfStatusOff",
   "fldLocalOffer",
   "fldRemoteOffer",
   "fldRemoteAnswer",
@@ -33,7 +34,8 @@ var iFace = {}
   "btnCreateOffer",
   "btnAcceptAnswer",
   "btnCreateAnswer",
-  "btnCancel"
+  "btnCancel",
+  "txtStatus"
 ].forEach(function (e) {
   iFace[e] = $("#"+e);
 });
@@ -173,13 +175,17 @@ function bindPeerConnectionHandlers (connection) {
 function bindDataChannelHandlers (channel) {
   channel.onopen = function () {
     console.log("Data channel opened.");
-    iFace.glfStatus.attr("class", "glyphicon glyphicon-ok-circle").css("color", "GreenYellow");
+    iFace.glfStatusOff.hide();
+    iFace.glfStatusOn.show();
+    iFace.txtStatus.text("Connected")
     iFace.modLocalAnswer.modal("hide");
     
   };
   channel.onclose = function () {
     console.log("Data channel closed.");
-    iFace.glfStatus.attr("class", "glyphicon glyphicon glyphicon-ban-circle").css("color", "gray");
+    iFace.glfStatusOn.hide();
+    iFace.glfStatusOff.show();
+    iFace.txtStatus.text("Not Connected")
   };
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
