@@ -138,6 +138,17 @@ function bindPeerConnectionHandlers (connection) {
     // Bind handlers to the data channel
     bindDataChannelHandlers(dc);
   };
+  
+    // Add ICE candidates and share with peers
+  connection.connection.onicecandidate = function (event) {
+    if (event.candidate) {
+      pc.connection.addIceCandidate(event.candidate);
+      
+      if (dc && dc.readyState === "open") {
+        dc.send(JSON.stringify({type: "iceCandidace", candidate: event.candidate}));
+      }
+    }
+  };
 }
 
 // Bind the messaging protcol to the data channel once established.
@@ -156,17 +167,6 @@ function bindDataChannelHandlers (channel) {
   };
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
-  
-  // Add ICE candidates and share with peers
-  pc.connection.onicecandidate = function (event) {
-    if (event.candidate) {
-      pc.connection.addIceCandidate(event.candidate);
-      
-      if (dc.readyState === "open") {
-        dc.send(JSON.stringify({type: "iceCandidace", candidate: event.candidate}));
-      }
-    }
-  };
 }
 
 // Some helper functions for the form fields
