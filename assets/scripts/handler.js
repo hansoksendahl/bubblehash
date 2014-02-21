@@ -82,6 +82,8 @@ function setOffer () {
   
   // Initialize a WebRTC offer.
   pc.open(function (description) {
+    pc.datachannel.onmessage = messageHandler;
+    
     bubblehash.xhr(commSilo+"/set/json")
       .data(description)
       .post(function () {
@@ -128,6 +130,8 @@ function setAnswer () {
     
     // Initialize a WebRTC answer
     pc.call(data, function (description) {
+      pc.datachannel.onmessage = messageHandler;
+      
       bubblehash.xhr(commSilo+"/set/json")
         .data(description)
         .post(function () {
@@ -138,6 +142,11 @@ function setAnswer () {
           });
         });
   });
+}
+
+// Bind the messaging protcol to the data channel once established.
+function messageHandler() {
+  alert("test");
 }
 
 

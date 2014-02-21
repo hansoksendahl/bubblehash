@@ -41,6 +41,9 @@ import "messages";
       if (event.candidate) {
         connection.addIceCandidate(event.candidate);
       }
+      if (out.datachannel && out.datachannel.readyState === "open") {
+        out.dataChannel.send(JSON.stringify({type: "iceCandidate", candidate: event.candidate}))
+      }
     }
     
     // Create an offer.
