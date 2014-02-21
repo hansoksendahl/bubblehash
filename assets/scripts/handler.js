@@ -187,6 +187,7 @@ function bindDataChannelHandlers (channel) {
   // Add ICE candidates and share with peers
   pc.connection.onicecandidate = function (event) {
     if (event.candidate) {
+      console.log(event.candidate);
       pc.connection.addIceCandidate(event.candidate);
       
       if (dc.readyState === "open") {

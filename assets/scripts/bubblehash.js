@@ -41,7 +41,6 @@ var bubblehash = (function bubblehash() {
                     (Object.prototype.toString.call(e).indexOf("Error") !== -1 ||
                         typeof e === "string")
                 ) {
-                    alert("blah")
                     message += "\n\n" + (e.stack ? e.stack : e)
                 }
 
