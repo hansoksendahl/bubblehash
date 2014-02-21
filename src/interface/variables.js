@@ -3,7 +3,12 @@ var iFace = {}
   , server
   , options
   , commSilo
-  , dataChannelName = "BubbleHash";
+  , dataChannelName
+  , leaseTime
+  , heartbeatTime
+  , timer;
+
+dataChannelName = "BubbleHash";
 
 // Create jQuery selectors for each of the following ids
 [
@@ -14,9 +19,7 @@ var iFace = {}
   "fldRemoteAnswer",
   "fldLocalAnswer",
   "modLocalOffer",
-  "modLocalAnswer",
   "modRemoteOffer",
-  "modRemoteAnswer",
   "navInvite",
   "navJoin",
   "btnCreateOffer",
@@ -29,3 +32,8 @@ var iFace = {}
 
 // Specify the communications Silo
 commSilo = "http://mudb.org";
+
+// Lease is 10 minutes on mudb
+leaseTime = 600000
+
+heartbeatTime = 10000

@@ -68,25 +68,30 @@ function setOffer () {
         iFace.fldLocalOffer.val(data.url);
         iFace.modLocalOffer.modal();
         iFace.fldLocalOffer.focus();
-        iFace.btnCreateOffer.click(getAnswer);
+        timer = setInterval(listenForAnswer(data), heartbeatTime);
       });
   });
 }
 
-// Get the answer sent from a peer
-function getAnswer () {
-  iFace.modRemoteAnswer.modal();
-  iFace.fldRemoteAnswer.val("").focus();
-  iFace.btnAcceptAnswer.click(acceptAnswer);
+function listenForAnswer (originalData) {
+  return function () {
+    xhr(originalData.url).get(function () {
+      var data = JSON.parse(this.responseText);
+      
+      if (data.__timestamp !== originalData.__timestamp) {
+        clearInterval(timer);
+        pc.answer(data);
+      }
+    });
+  }
 }
 
 // Establish the connection
-function acceptAnswer () {
-  xhr(iFace.fldRemoteAnswer.val()).get(function () {
+function acceptAnswer (val) {
+  xhr(val).get(function () {
     var data = JSON.parse(this.responseText);
     
     pc.answer(data);
-    iFace.modRemoteAnswer.modal("hide");
   });
 }
 
@@ -96,6 +101,7 @@ function getOffer () {
   iFace.fldRemoteOffer.val("").focus();
   iFace.btnCreateAnswer.click(setAnswer);
 }
+
 
 // Create an RSVP URL and show the local answer modal window
 function setAnswer () {
@@ -113,16 +119,13 @@ function setAnswer () {
     
     // Initialize a WebRTC answer
     pc.call(data, function (description) {
+      description.__id = data.__id;
+      
       // Put the WebRTC answer in the communications silo
       xhr(commSilo+"/set/json")
         .data(description)
-        .post(function () {
-            var data = JSON.parse(this.responseText);
-            iFace.fldLocalAnswer.val(data.url);
-            iFace.modLocalAnswer.modal();
-            iFace.fldLocalAnswer.focus();
-          });
-        });
+        .post();
+    });
   });
 }
 
