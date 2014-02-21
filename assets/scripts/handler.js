@@ -162,7 +162,7 @@ function bindDataChannelHandlers (channel) {
   // Add ICE candidates and share with peers
   pc.connection.onicecandidate = function (event) {
     if (event.candidate) {
-      connection.addIceCandidate(event.candidate);
+      pc.connection.addIceCandidate(event.candidate);
       
       channel.send(JSON.stringify({type: "iceCandidace", candidate: event.candidate}));
     }
