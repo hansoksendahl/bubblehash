@@ -163,7 +163,8 @@ function bindDataChannelHandlers (channel) {
   };
   channel.onclose = function () {
     console.log("Data channel closed.");
-    iFace.glfStatus.attr("class", "glyphicon glyphicon glyphicon-ban-circle").style("color", "gray");
+    iFace.glfStatus.attr("class", "glyphicon glyphicon glyphicon-ban-circle")
+    iFace.glfStatus.style("color", "gray");
   };
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
