@@ -121,6 +121,8 @@ function setAnswer () {
     pc.call(data, function (description) {
       description.__id = data.__id;
       
+      console.log(description)
+      
       // Put the WebRTC answer in the communications silo
       xhr(commSilo+"/set/json")
         .data(description)
