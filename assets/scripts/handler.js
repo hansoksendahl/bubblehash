@@ -87,9 +87,6 @@ function setOffer () {
   // Create a peer connection object
   pc = bubblehash.rtc(commServer, commOptions);
   
-  // Bind handlers to the peer connection
-  bindPeerConnectionHandlers
-  
   // Create a data channel
   dc = pc.connection.createDataChannel(dataChannelName);
   
