@@ -393,7 +393,7 @@ function getOffer() {
 // Create an RSVP URL and show the local answer modal window
 function setAnswer() {
     // Create a peer connection object
-    pc = rtc(commServer, commOptions);
+    pc = rtc(server, options);
 
     // Bind handlers to the peer connection
     bindPeerConnectionHandlers(pc);
