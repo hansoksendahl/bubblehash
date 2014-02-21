@@ -119,13 +119,13 @@ function setAnswer () {
     
     // Initialize a WebRTC answer
     pc.call(data, function (description) {
-      description.__id = data.__id;
-      
-      console.log(description)
+      data.__timestamp = void(0);
+      data.sdp = description.sdp;
+      data.type = description.type;
       
       // Put the WebRTC answer in the communications silo
       xhr(commSilo+"/set/json")
-        .data(description)
+        .data(data)
         .post();
     });
   });
