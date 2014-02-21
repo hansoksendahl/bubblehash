@@ -35,7 +35,7 @@ var bubblehash = (function bubblehash() {
             var message = prefix + messages[code];
 
             return function(e) {
-                console.log(type, Object.prototype.toString.call(e), Object.prototype.toString.call(e).indexOf("Error"))
+                console.log(type, Object.prototype.toString.call(e), Object.prototype.toString.call(e).indexOf("Error"), e)
                 if ((type === "error" || type === "warning") && Object.prototype.toString.call(e).indexOf("Error") !== -1) {
                     alert("blah")
                     message += "\n\n" + e.stack
