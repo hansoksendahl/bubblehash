@@ -39,6 +39,8 @@ var iFace = {}
 
 // Specify the communications Silo
 commSilo = "http://mudb.org";
+
+shutdown
   
 // Specify the WebRTC ICE servers
 commServer = {
@@ -74,9 +76,6 @@ commOptions = {
   ]
 };
 
-// Create a peer connection object
-pc = bubblehash.rtc(commServer, commOptions);
-
 // Bind message handler when datachannel is created
 pc.connection.ondatachannel = function (event) {
   dc = event.channel;
@@ -87,6 +86,9 @@ pc.connection.ondatachannel = function (event) {
 
 // Create an Invite URL and show the local offer modal window
 function setOffer () {
+  // Create a peer connection object
+  pc = bubblehash.rtc(commServer, commOptions);
+  
   // Create a data channel
   dc = pc.connection.createDataChannel(dataChannelName);
   
@@ -134,6 +136,9 @@ function getOffer () {
 
 // Create an RSVP URL and show the local answer modal window
 function setAnswer () {
+  // Create a peer connection object
+  pc = bubblehash.rtc(commServer, commOptions);
+  
   // Get the offer associated with the url.
   bubblehash.xhr(iFace.fldRemoteOffer.val()).get(function () {
     var data = JSON.parse(this.responseText);
