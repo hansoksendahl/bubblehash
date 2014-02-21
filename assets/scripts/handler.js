@@ -130,11 +130,11 @@ function setAnswer () {
     
     // Initialize a WebRTC answer
     pc.call(data, function (description) {
-      pc.datachannel.onmessage = messageHandler;
-      
       bubblehash.xhr(commSilo+"/set/json")
         .data(description)
         .post(function () {
+            pc.datachannel.onmessage = messageHandler;
+            
             var data = JSON.parse(this.responseText);
             iFace.fldLocalAnswer.val(data.url);
             iFace.modLocalAnswer.modal();
