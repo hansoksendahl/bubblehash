@@ -12,13 +12,6 @@ import "messages";
   // Create a logger callback object
   var log = logger(logMessages, "RTC")
   
-  function bindDataChannelEvents (channel) {
-    channel.onmessage = log.message(0x0011);
-    channel.onopen = log.message(0x0010);
-    channel.onerror = log.error(0x2010);
-    channel.onclose = log.message(0x0012);
-  }
-  
   // Initialize the connection
   return function init (server, options) {
     var connection = new peerConnection(server, options)
@@ -41,34 +34,16 @@ import "messages";
       if (event.candidate) {
         connection.addIceCandidate(event.candidate);
       }
-      if (out.datachannel && out.datachannel.readyState === "open") {
-        out.datachannel.send(JSON.stringify({type: "iceCandidate", candidate: event.candidate}))
-      }
     }
     
     // Create an offer.
     function createOffer (success) {
-      // Expose the datachannel object
-      var datachannel = connection.createDataChannel("BH", { reliable: false });
-      
-      bindDataChannelEvents(datachannel);
-      
-      out.datachannel = datachannel;
-      
       success = log.message(0x0001, success);
       connection.createOffer(success, log.error(0x2001), {mandatory: {OfferToReceiveVideo: false, OfferToReceiveAudio: false}});
     }
     
     // Create an answer.
     function createAnswer (success) {
-      connection.ondatachannel = function (event) {
-        var datachannel = event.channel;
-        
-        bindDataChannelEvents(datachannel);
-        
-        out.datachannel = datachannel;
-      }
-      
       success = log.message(0x0002, success);
       connection.createAnswer(success, log.error(0x2002), {mandatory: {OfferToReceiveVideo: false, OfferToReceiveAudio: false}});
     }
