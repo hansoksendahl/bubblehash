@@ -40,9 +40,9 @@ dc = pc.connection.createDataChannel(dataChannelName);
 
 function shutdown () {
   dc.close();
-  pc.close();
+  pc.connection.close();
   dc = void(0);
-  pc.void(0);
+  pc = void(0);
 }
 
 // Create an Invite URL and show the local offer modal window
