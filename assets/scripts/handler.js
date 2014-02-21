@@ -72,15 +72,11 @@ commOptions = {
   ]
 };
 
-// Initialize a PeerConnection
-function initPeer () {
-  pc = bubblehash.rtc(commServer, commOptions);
-}
+
+pc = bubblehash.rtc(commServer, commOptions);
 
 // Create an Invite URL and show the local offer modal window
 function setOffer () {
-  initPeer();
-  
   // Initialize a WebRTC offer.
   pc.open(function (description) {
     bubblehash.xhr(commSilo+"/set/json")
@@ -124,8 +120,6 @@ function setAnswer () {
   // Get the offer associated with the url.
   bubblehash.xhr(iFace.fldRemoteOffer.val()).get(function () {
     var data = JSON.parse(this.responseText);
-    
-    initPeer();
     
     // Initialize a WebRTC answer
     pc.call(data, function (description) {
