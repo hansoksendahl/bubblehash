@@ -138,7 +138,7 @@ function setAnswer () {
   pc = bubblehash.rtc(commServer, commOptions);
   
   // Bind handlers to the peer connection
-  bindPeerConnectionHandlers
+  bindPeerConnectionHandlers(pc)
   
   // Get the offer associated with the url.
   bubblehash.xhr(iFace.fldRemoteOffer.val()).get(function () {
