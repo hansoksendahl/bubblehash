@@ -334,6 +334,7 @@ options = {
 };
 
 pc = rtc(server, options);
+dc = pc.connection.createDataChannel(dataChannelName);
 
 function shutdown() {
     dc.close();
