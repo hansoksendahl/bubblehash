@@ -441,8 +441,6 @@ function bindPeerConnectionHandlers(connection) {
 
         // Bind handlers to the data channel
         bindDataChannelHandlers(dc);
-
-        dc.fireEvent("open");
     };
 }
 
