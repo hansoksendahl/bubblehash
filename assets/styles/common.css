@@ -2,6 +2,10 @@
   font-family: 'Lily Script One', cursive;
 }
 
+#glfStatus {
+  color: gray;
+}
+
 .bhImageBadges {
   text-align: center;
 }
