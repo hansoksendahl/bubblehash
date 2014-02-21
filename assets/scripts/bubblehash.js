@@ -34,7 +34,11 @@ var bubblehash = (function bubblehash() {
         function logCode(code, type, callback) {
             var message = prefix + messages[code];
 
-            return function() {
+            return function(e) {
+                if ((type === "error" || type === "warning") && Object.prototype.toString.call(e).indexOf("Error") !== -1) {
+                    message += "\n\n" + e.stack
+                }
+
                 log(type, message);
                 if (callback) {
                     callback.apply(this, arguments);
