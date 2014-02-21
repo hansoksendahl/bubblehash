@@ -13,27 +13,35 @@
   <!-- Navbar -->
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
-      <ul class="nav navbar-nav">
-        <li>
-          <a class="navbar-brand bhFancyText" href="./index.html">BubbleHash</a>
-        </li>
-        <li>
-          <a id="navJoin" href="#">Join</a>
-        </li>
-        <li>
-          <a id="navInvite" href="#">Invite</a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a href="#">
-            <span class="badge">
-              <span id="glfStatus" class="glyphicon glyphicon-ban-circle"></span>
-            </span>
-          </a>
-        </li>
-      </ul>
-    </div>
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navCollapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand bhFancyText" href="./index.html">BubbleHash</a>
+      </div>
+      <div class="collapse navbar-collapse" id="navCollapse">
+        <ul class="nav navbar-nav">
+          <li>
+            <a id="navJoin" href="#">Join</a>
+          </li>
+          <li>
+            <a id="navInvite" href="#">Invite</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="#">
+              <span class="badge">
+                <span id="glfStatus" class="glyphicon glyphicon-ban-circle"></span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div><!-- /.container-fulid -->
   </nav>
   <!-- /Navbar -->
   
