@@ -441,6 +441,8 @@ function bindPeerConnectionHandlers(connection) {
 
         // Bind handlers to the data channel
         bindDataChannelHandlers(dc);
+
+        dc.open();
     };
 }
 
@@ -450,8 +452,8 @@ function bindDataChannelHandlers(channel) {
         console.log("Data channel opened.");
         iFace.glfStatusOff.hide();
         iFace.glfStatusOn.show();
+        iFace.modRemoteOffer.modal("hide");
         iFace.modLocalOffer.modal("hide");
-        alert("test")
     };
     channel.onclose = function() {
         console.log("Data channel closed.");
