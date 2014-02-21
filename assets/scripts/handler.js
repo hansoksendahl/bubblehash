@@ -32,15 +32,14 @@ var iFace = {}
   "navJoin",
   "btnCreateOffer",
   "btnAcceptAnswer",
-  "btnCreateAnswer"
+  "btnCreateAnswer",
+  "btnCancel"
 ].forEach(function (e) {
   iFace[e] = $("#"+e);
 });
 
 // Specify the communications Silo
 commSilo = "http://mudb.org";
-
-shutdown
   
 // Specify the WebRTC ICE servers
 commServer = {
@@ -75,6 +74,13 @@ commOptions = {
     {RtpDataChannels: true}
   ]
 };
+
+function shutdown () {
+  dc.close();
+  pc.close();
+  dc = void(0);
+  pc.void(0);
+}
 
 // Bind message handler when datachannel is created
 pc.connection.ondatachannel = function (event) {
@@ -196,3 +202,4 @@ iFace.fldLocalAnswer
 
 iFace.navInvite.click(setOffer);
 iFace.navJoin.click(getOffer);
+iFace.btnCancel.click(shutdown);
