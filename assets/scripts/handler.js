@@ -19,6 +19,7 @@ var iFace = {}
 
 // Create jQuery selectors for each of the following ids
 [
+  "glfStatus",
   "fldLocalOffer",
   "fldRemoteOffer",
   "fldRemoteAnswer",
@@ -154,8 +155,16 @@ function setAnswer () {
 
 // Bind the messaging protcol to the data channel once established.
 function bindDataChannelHandlers (channel) {
-  channel.onopen = function () { iFace.modLocalAnswer.modal("hide") };
-  channel.onclose = function () { console.log("Data channel closed.") };
+  channel.onopen = function () {
+    console.log("Data channel opened.");
+    iFace.glfStatus.attr("class", "glyphicon glyphicon-ok-circle");
+    iFace.modLocalAnswer.modal("hide");
+    
+  };
+  channel.onclose = function () {
+    console.log("Data channel closed.");
+    iFace.glfStatus.attr("class", "glyphicon glyphicon glyphicon-ban-circle");
+  };
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
   
