@@ -157,14 +157,13 @@ function setAnswer () {
 function bindDataChannelHandlers (channel) {
   channel.onopen = function () {
     console.log("Data channel opened.");
-    iFace.glfStatus.attr("class", "glyphicon glyphicon-ok-circle").style("color", "green");
+    iFace.glfStatus.attr("class", "glyphicon glyphicon-ok-circle").css("color", "green");
     iFace.modLocalAnswer.modal("hide");
     
   };
   channel.onclose = function () {
     console.log("Data channel closed.");
-    iFace.glfStatus.attr("class", "glyphicon glyphicon glyphicon-ban-circle")
-    iFace.glfStatus.style("color", "gray");
+    iFace.glfStatus.attr("class", "glyphicon glyphicon glyphicon-ban-circle").css("color", "gray");
   };
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
