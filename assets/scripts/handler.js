@@ -73,8 +73,16 @@ commOptions = {
   ]
 };
 
-
+// Create a peer connection object
 pc = bubblehash.rtc(commServer, commOptions);
+
+// Bind message handler when datachannel is created
+pc.connection.ondatachannel = function (event) {
+  dc = event.channel;
+  
+  // Bind handlers to the data channel
+  bindDataChannelHandlers(dc);
+};
 
 // Create an Invite URL and show the local offer modal window
 function setOffer () {
@@ -144,20 +152,22 @@ function setAnswer () {
   });
 }
 
-// Bind message handler when datachannel is created
-pc.connection.ondatachannel = function (event) {
-  dc = event.channel;
-  
-  // Bind handlers to the data channel
-  bindDataChannelHandlers(dc);
-};
-
 // Bind the messaging protcol to the data channel once established.
 function bindDataChannelHandlers (channel) {
   channel.onopen = function () { console.log("Data channel opened.") };
   channel.onclose = function () { console.log("Data channel closed.") };
   channel.onmessage = function (event) { console.log(event.data) };
   channel.onerror = function (err) { console.error(err) };
+  
+    
+  // Add ICE candidates and share with peers
+  pc.connection.onicecandidate = function (event) {
+    if (event.candidate) {
+      connection.addIceCandidate(event.candidate);
+      
+      channel.send(JSON.stringify({type: "iceCandidace", candidate: event.candidate}));
+    }
+  }
 }
 
 

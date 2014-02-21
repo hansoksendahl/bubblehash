@@ -20,22 +20,6 @@ import "messages";
     // Expose the peer connection object
     out.connection = connection;
     
-    connection.onicecandidate = addIceCandidate;
-    
-    // Parse messages send over the data channel.
-    function message (event) {
-      var signal = JSON.parse(event.data);
-      
-      console.log(signal);
-    }
-    
-    // Add ICE candidates.
-    function addIceCandidate (event) {
-      if (event.candidate) {
-        connection.addIceCandidate(event.candidate);
-      }
-    }
-    
     // Create an offer.
     function createOffer (success) {
       success = log.message(0x0001, success);
