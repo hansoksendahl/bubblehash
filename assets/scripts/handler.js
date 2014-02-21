@@ -82,18 +82,13 @@ function shutdown () {
   pc.void(0);
 }
 
-// Bind message handler when datachannel is created
-pc.connection.ondatachannel = function (event) {
-  dc = event.channel;
-  
-  // Bind handlers to the data channel
-  bindDataChannelHandlers(dc);
-};
-
 // Create an Invite URL and show the local offer modal window
 function setOffer () {
   // Create a peer connection object
   pc = bubblehash.rtc(commServer, commOptions);
+  
+  // Bind handlers to the peer connection
+  bindPeerConnectionHandlers
   
   // Create a data channel
   dc = pc.connection.createDataChannel(dataChannelName);
@@ -145,6 +140,9 @@ function setAnswer () {
   // Create a peer connection object
   pc = bubblehash.rtc(commServer, commOptions);
   
+  // Bind handlers to the peer connection
+  bindPeerConnectionHandlers
+  
   // Get the offer associated with the url.
   bubblehash.xhr(iFace.fldRemoteOffer.val()).get(function () {
     var data = JSON.parse(this.responseText);
@@ -162,6 +160,16 @@ function setAnswer () {
           });
         });
   });
+}
+
+function bindPeerConnectionHandlers (connection) {
+  // Bind message handler when datachannel is created
+  connection.connection.ondatachannel = function (event) {
+    dc = event.channel;
+    
+    // Bind handlers to the data channel
+    bindDataChannelHandlers(dc);
+  };
 }
 
 // Bind the messaging protcol to the data channel once established.
