@@ -332,8 +332,6 @@ server = {
 // Specify the WebRTC options
 options = {
     optional: [{
-        DtlsSrtpKeyAgreement: true
-    }, {
         RtpDataChannels: true
     }]
 };
