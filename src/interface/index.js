@@ -148,8 +148,7 @@ function bindDataChannelHandlers (channel) {
     iFace.glfStatusOff.hide();
     iFace.glfStatusOn.show();
     iFace.modLocalOffer.modal("hide");
-    iFace.modRemoteOffer.modal("hide");
-    
+    alert("test")
   };
   channel.onclose = function () {
     console.log("Data channel closed.");
