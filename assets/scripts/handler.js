@@ -78,10 +78,15 @@ pc = bubblehash.rtc(commServer, commOptions);
 
 // Create an Invite URL and show the local offer modal window
 function setOffer () {
+  // Create a data channel
   dc = pc.connection.createDataChannel(dataChannelName);
+  
+  // Bind handlers to the data channel
+  bindDataChannelHandlers(dc);
   
   // Initialize a WebRTC offer.
   pc.open(function (description) {
+    // Put the WebRTC offer in the communications silo
     bubblehash.xhr(commSilo+"/set/json")
       .data(description)
       .post(function () {
@@ -126,6 +131,7 @@ function setAnswer () {
     
     // Initialize a WebRTC answer
     pc.call(data, function (description) {
+      // Put the WebRTC answer in the communications silo
       bubblehash.xhr(commSilo+"/set/json")
         .data(description)
         .post(function () {
@@ -139,13 +145,19 @@ function setAnswer () {
 }
 
 // Bind message handler when datachannel is created
-pc.connection.ondatachannel = function () {
+pc.connection.ondatachannel = function (event) {
+  dc = event.channel;
   
-}
+  // Bind handlers to the data channel
+  bindDataChannelHandlers(dc);
+};
 
 // Bind the messaging protcol to the data channel once established.
-function messageHandler() {
-  alert("test");
+function bindDataChannelHandlers (channel) {
+  channel.onopen = function () { console.log("Data channel opened.") };
+  channel.onclose = function () { console.log("Data channel closed.") };
+  channel.onmessage = function (event) { console.log(event.data) };
+  channel.onerror = function (err) { console.error(err) };
 }
 
 
