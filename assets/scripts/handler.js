@@ -144,9 +144,11 @@ function setAnswer () {
 // Make text selected on focus
 iFace.fldLocalOffer
     .focus(function () { this.select(); })
+    .mouseenter(function () { this.select(); })
     .mouseup(function () { return false; })
 iFace.fldLocalAnswer
     .focus(function () { this.select(); })
+    .mouseenter(function () { this.select(); })
     .mouseup(function () { return false; })
 
 iFace.btnInvite.click(setOffer);
