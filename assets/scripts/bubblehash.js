@@ -216,7 +216,7 @@ var bubblehash = (function bubblehash() {
                     connection.addIceCandidate(event.candidate);
                 }
                 if (out.datachannel && out.datachannel.readyState === "open") {
-                    out.dataChannel.send(JSON.stringify({
+                    out.datachannel.send(JSON.stringify({
                         type: "iceCandidate",
                         candidate: event.candidate
                     }))

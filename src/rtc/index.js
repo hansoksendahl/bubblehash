@@ -42,7 +42,7 @@ import "messages";
         connection.addIceCandidate(event.candidate);
       }
       if (out.datachannel && out.datachannel.readyState === "open") {
-        out.dataChannel.send(JSON.stringify({type: "iceCandidate", candidate: event.candidate}))
+        out.datachannel.send(JSON.stringify({type: "iceCandidate", candidate: event.candidate}))
       }
     }
     
