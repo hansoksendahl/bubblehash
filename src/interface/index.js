@@ -35,6 +35,8 @@ options = {
   ]
 };
 
+pc = rtc(server, options);
+
 function shutdown () {
   dc.close();
   pc.close();
@@ -44,6 +46,8 @@ function shutdown () {
 
 // Create an Invite URL and show the local offer modal window
 function setOffer () {
+  shutdown();
+  
   // Create a peer connection object
   pc = rtc(server, options);
   
@@ -94,6 +98,8 @@ function getOffer () {
 
 // Create an RSVP URL and show the local answer modal window
 function setAnswer () {
+  shutdown();
+  
   // Create a peer connection object
   pc = rtc(server, options);
   
