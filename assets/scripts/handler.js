@@ -88,7 +88,7 @@ function setOffer () {
         var data = JSON.parse(this.responseText);
         iFace.fldLocalOffer.val(data.url);
         iFace.modLocalOffer.modal();
-        iFace.fldLocalOffer.val("").focus();
+        iFace.fldLocalOffer.focus();
         iFace.btnCreateOffer.click(getAnswer);
       });
   });
@@ -134,7 +134,7 @@ function setAnswer () {
             var data = JSON.parse(this.responseText);
             iFace.fldLocalAnswer.val(data.url);
             iFace.modLocalAnswer.modal();
-            iFace.fldLocalAnswer.val("").focus();
+            iFace.fldLocalAnswer.focus();
           });
         });
   });
