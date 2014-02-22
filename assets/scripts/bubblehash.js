@@ -229,7 +229,6 @@ var rtc = (function rtc() {
 
             // Produce a WebRTC offer
             out.open = function(callback, options) {
-                console.log(options);
                 createOffer(function(description) {
                     setLocalDescription(description, callback);
                 }, log.error(0x2012), options);
@@ -388,8 +387,10 @@ function setOffer() {
                 timer = setInterval(listenForAnswer(data), heartbeatTime);
             });
     }, void(0), {
-        OfferToReceiveAudio: false,
-        OfferToReceiveVideo: false
+        mandatory: {
+            OfferToReceiveAudio: false,
+            OfferToReceiveVideo: false
+        }
     });
 }
 
@@ -448,8 +449,10 @@ function setAnswer() {
                 .data(data)
                 .post();
         }, {
-            OfferToReceiveAudio: false,
-            OfferToReceiveVideo: false
+            mandatory: {
+                OfferToReceiveAudio: false,
+                OfferToReceiveVideo: false
+            }
         });
     });
 }
