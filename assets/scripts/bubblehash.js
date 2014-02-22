@@ -50,8 +50,8 @@ function logger(messages, prefix) {
     }
 
     // Log a warning message
-    out.warning = function(code, callback) {
-        return logCode(code, "warning", callback);
+    out.warn = function(code, callback) {
+        return logCode(code, "warn", callback);
     };
     // Log an error message
     out.error = function(code, callback) {
@@ -179,6 +179,8 @@ var rtc = (function rtc() {
     logMessages[0x0012] = "Data channel closed.";
     logMessages[0x2010] = "Error on data channel."
     logMessages[0x1000] = "Was not able to create ICE candidate."
+    logMessages[0x2011] = "An error occured while creating an answer."
+    logMessages[0x2012] = "An error occured while creating an offer."
 
     // Create a logger callback object
     var log = logger(logMessages, "RTC")
@@ -226,10 +228,10 @@ var rtc = (function rtc() {
             }
 
             // Produce a WebRTC offer
-            out.open = function(callback) {
+            out.open = function(callback, options) {
                 createOffer(function(description) {
                     setLocalDescription(description, callback);
-                }, options);
+                }, log.error(0x2012), options);
             };
             // Answer a WebRTC offer
             out.call = function(remoteDescription, callback, options) {
@@ -237,17 +239,15 @@ var rtc = (function rtc() {
                 createAnswer(function(localDescription) {
                     setLocalDescription(localDescription);
                     callback(localDescription);
-                }, options)
+                }, log.error(0x2011), options)
             }
             out.answer = function(description) {
                 setRemoteDescription(description);
             }
             out.addIceCandidate = function(candidate, success) {
-                success = log.warning(0x0005, success);
-                connection.addIceCandidate(new iceCandidate({
-                    sdpMLineIndex: candidate.sdpMLineINdex,
-                    candidate: candidate.candidate
-                }), success, log.warning(0x1000));
+                // Success and failure functions are not currently supported in chrome
+                success = log.warn(0x0005, success)();
+                connection.addIceCandidate(new iceCandidate(candidate));
             }
 
             return out;
@@ -366,6 +366,8 @@ function setOffer() {
     // Create a peer connection object
     pc = rtc(server, options);
 
+    bindPeerConnectionHandlers(pc)
+
     // Create a data channel
     dc = pc.connection.createDataChannel(dataChannelName);
 
@@ -384,6 +386,9 @@ function setOffer() {
                 iFace.fldLocalOffer.focus();
                 timer = setInterval(listenForAnswer(data), heartbeatTime);
             });
+    }, void(0), {
+        offerToReceiveAudio: false,
+        offerToReceiveVideo: false
     });
 }
 
@@ -441,6 +446,9 @@ function setAnswer() {
             xhr(commSilo + "/set/json")
                 .data(data)
                 .post();
+        }, {
+            offerToReceiveAudio: false,
+            offerToReceiveVideo: false
         });
     });
 }
@@ -456,7 +464,6 @@ function bindPeerConnectionHandlers(connection) {
 
     // Add ICE candidates and share with peers
     connection.connection.onicecandidate = function(event) {
-        console.log(event);
         if (event.candidate) {
             pc.addIceCandidate(event.candidate);
 

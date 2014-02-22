@@ -29,7 +29,7 @@ function logger (messages, prefix) {
     };
   }
 
-import "warning";
+import "warn";
 import "error";
 import "message";
   

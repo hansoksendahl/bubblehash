@@ -1,7 +1,5 @@
 out.addIceCandidate = function (candidate, success) {
-  success = log.warning(0x0005, success);
-  connection.addIceCandidate(new iceCandidate({
-    sdpMLineIndex: candidate.sdpMLineINdex,
-    candidate: candidate.candidate
-  }), success, log.warning(0x1000));
+  // Success and failure functions are not currently supported in chrome
+  success = log.warn(0x0005, success)();
+  connection.addIceCandidate(new iceCandidate(candidate));
 }

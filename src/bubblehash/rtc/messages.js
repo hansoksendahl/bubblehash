@@ -14,3 +14,5 @@ logMessages[0x0011] = "Data channel message received.";
 logMessages[0x0012] = "Data channel closed.";
 logMessages[0x2010] = "Error on data channel."
 logMessages[0x1000] = "Was not able to create ICE candidate."
+logMessages[0x2011] = "An error occured while creating an answer."
+logMessages[0x2012] = "An error occured while creating an offer."

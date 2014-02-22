@@ -4,5 +4,5 @@ out.call = function (remoteDescription, callback, options) {
   createAnswer(function (localDescription) {
     setLocalDescription(localDescription);
     callback(localDescription);
-  }, options)
+  }, log.error(0x2011), options)
 }

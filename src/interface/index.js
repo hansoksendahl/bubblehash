@@ -55,6 +55,8 @@ function setOffer () {
   // Create a peer connection object
   pc = rtc(server, options);
   
+  bindPeerConnectionHandlers(pc)
+  
   // Create a data channel
   dc = pc.connection.createDataChannel(dataChannelName);
   
@@ -73,7 +75,7 @@ function setOffer () {
         iFace.fldLocalOffer.focus();
         timer = setInterval(listenForAnswer(data), heartbeatTime);
       });
-  });
+  }, void(0), {offerToReceiveAudio: false, offerToReceiveVideo: false});
 }
 
 function listenForAnswer (originalData) {
@@ -130,7 +132,7 @@ function setAnswer () {
       xhr(commSilo+"/set/json")
         .data(data)
         .post();
-    });
+    }, {offerToReceiveAudio: false, offerToReceiveVideo: false});
   });
 }
 
@@ -145,7 +147,6 @@ function bindPeerConnectionHandlers (connection) {
   
     // Add ICE candidates and share with peers
   connection.connection.onicecandidate = function (event) {
-    console.log(event);
     if (event.candidate) {
       pc.addIceCandidate(event.candidate);
       
