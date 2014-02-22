@@ -169,6 +169,7 @@ var rtc = (function rtc() {
     logMessages[0x0002] = "Creating an answer.";
     logMessages[0x0003] = "Setting local description.";
     logMessages[0x0004] = "Setting remote description.";
+    logMessages[0x0005] = "Adding ICE candidate."
     logMessages[0x2000] = "An error occured while setting the local description.";
     logMessages[0x2001] = "An error occured creating an offer.";
     logMessages[0x2002] = "An error occured creating an answer.";
@@ -177,6 +178,7 @@ var rtc = (function rtc() {
     logMessages[0x0011] = "Data channel message received.";
     logMessages[0x0012] = "Data channel closed.";
     logMessages[0x2010] = "Error on data channel."
+    logMessages[0x1000] = "Was not able to create ICE candidate."
 
     // Create a logger callback object
     var log = logger(logMessages, "RTC")
@@ -221,6 +223,14 @@ var rtc = (function rtc() {
                 connection.setRemoteDescription(dict, function() {
                     success(dict)
                 }, log.error(0x2003));
+            }
+
+            function addIceCandidate(candidate, success) {
+                success = log.warning(0x0005, success);
+                connection.addIceCandidate(new iceCandidate({
+                    sdpMLineIndex: candidate.sdpMLineINdex,
+                    candidate: candidate.candidate
+                }), success, log.warning(0x1000));
             }
 
             // Produce a WebRTC offer
@@ -340,10 +350,14 @@ pc = rtc(server, options);
 dc = pc.connection.createDataChannel(dataChannelName);
 
 function shutdown() {
-    dc.close();
-    pc.connection.close();
-    dc = void(0);
-    pc = void(0);
+    if (dc) {
+        dc.close();
+        dc = void(0);
+    }
+    if (pc) {
+        pc.connection.close();
+        pc = void(0);
+    }
 }
 
 // Create an Invite URL and show the local offer modal window
@@ -444,7 +458,7 @@ function bindPeerConnectionHandlers(connection) {
     // Add ICE candidates and share with peers
     connection.connection.onicecandidate = function(event) {
         if (event.candidate) {
-            pc.connection.addIceCandidate(event.candidate);
+            pc.addIceCandidate(event.candidate);
 
             if (dc && dc.readyState === "open") {
                 dc.send(JSON.stringify({

@@ -38,10 +38,14 @@ pc = rtc(server, options);
 dc = pc.connection.createDataChannel(dataChannelName);
 
 function shutdown () {
-  dc.close();
-  pc.connection.close();
-  dc = void(0);
-  pc = void(0);
+  if (dc) {
+    dc.close();
+    dc = void(0);
+  }
+  if (pc) {
+    pc.connection.close();
+    pc = void(0);
+  }
 }
 
 // Create an Invite URL and show the local offer modal window
@@ -142,7 +146,7 @@ function bindPeerConnectionHandlers (connection) {
     // Add ICE candidates and share with peers
   connection.connection.onicecandidate = function (event) {
     if (event.candidate) {
-      pc.connection.addIceCandidate(event.candidate);
+      pc.addIceCandidate(event.candidate);
       
       if (dc && dc.readyState === "open") {
         dc.send(JSON.stringify({type: "iceCandidace", candidate: event.candidate}));
