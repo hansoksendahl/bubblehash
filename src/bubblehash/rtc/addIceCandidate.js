@@ -1,4 +1,4 @@
-out.function addIceCandidate (candidate, success) {
+out.addIceCandidate = function (candidate, success) {
   success = log.warning(0x0005, success);
   connection.addIceCandidate(new iceCandidate({
     sdpMLineIndex: candidate.sdpMLineINdex,
