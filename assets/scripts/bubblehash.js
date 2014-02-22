@@ -457,6 +457,7 @@ function bindPeerConnectionHandlers(connection) {
 
     // Add ICE candidates and share with peers
     connection.connection.onicecandidate = function(event) {
+        console.log(event);
         if (event.candidate) {
             pc.addIceCandidate(event.candidate);
 
