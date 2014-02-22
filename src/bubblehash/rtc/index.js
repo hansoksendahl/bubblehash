@@ -49,14 +49,6 @@ import "messages";
       var dict = new sessionDescription(description);
       connection.setRemoteDescription(dict, function () { success(dict) }, log.error(0x2003));
     }
-    
-    function addIceCandidate (candidate, success) {
-      success = log.warning(0x0005, success);
-      connection.addIceCandidate(new iceCandidate({
-        sdpMLineIndex: candidate.sdpMLineINdex,
-        candidate: candidate.candidate
-      }), success, log.warning(0x1000));
-    }
 
 import "open";
 import "call";
