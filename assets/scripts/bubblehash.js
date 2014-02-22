@@ -376,22 +376,23 @@ function setOffer() {
 
     // Initialize a WebRTC offer.
     pc.open(function(description) {
-        // Put the WebRTC offer in the communications silo
-        xhr(commSilo + "/set/json")
-            .data(description)
-            .post(function() {
-                var data = JSON.parse(this.responseText);
-                iFace.fldLocalOffer.val(data.url);
-                iFace.modLocalOffer.modal();
-                iFace.fldLocalOffer.focus();
-                timer = setInterval(listenForAnswer(data), heartbeatTime);
-            });
-    }, void(0), {
-        mandatory: {
-            OfferToReceiveAudio: false,
-            OfferToReceiveVideo: false
-        }
-    });
+            // Put the WebRTC offer in the communications silo
+            xhr(commSilo + "/set/json")
+                .data(description)
+                .post(function() {
+                    var data = JSON.parse(this.responseText);
+                    iFace.fldLocalOffer.val(data.url);
+                    iFace.modLocalOffer.modal();
+                    iFace.fldLocalOffer.focus();
+                    timer = setInterval(listenForAnswer(data), heartbeatTime);
+                });
+        },
+        void(0), {
+            mandatory: {
+                OfferToReceiveAudio: false,
+                OfferToReceiveVideo: false
+            }
+        });
 }
 
 function listenForAnswer(originalData) {

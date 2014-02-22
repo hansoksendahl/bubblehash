@@ -75,10 +75,14 @@ function setOffer () {
         iFace.fldLocalOffer.focus();
         timer = setInterval(listenForAnswer(data), heartbeatTime);
       });
-  }, void(0), {mandatory: {
-        OfferToReceiveAudio: false,
-        OfferToReceiveVideo: false
-    }});
+  },
+  void(0),
+  {
+    mandatory: {
+      OfferToReceiveAudio: false,
+      OfferToReceiveVideo: false
+    }
+  });
 }
 
 function listenForAnswer (originalData) {
@@ -135,10 +139,12 @@ function setAnswer () {
       xhr(commSilo+"/set/json")
         .data(data)
         .post();
-    }, {mandatory: {
+    }, {
+      mandatory: {
         OfferToReceiveAudio: false,
         OfferToReceiveVideo: false
-    }});
+      }
+    });
   });
 }
 
