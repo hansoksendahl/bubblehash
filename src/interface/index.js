@@ -75,7 +75,7 @@ function setOffer () {
         iFace.fldLocalOffer.focus();
         timer = setInterval(listenForAnswer(data), heartbeatTime);
       });
-  }, void(0), {offerToReceiveAudio: false, offerToReceiveVideo: false});
+  }, void(0), {OfferToReceiveAudio: false, OfferToReceiveVideo: false});
 }
 
 function listenForAnswer (originalData) {
@@ -132,7 +132,7 @@ function setAnswer () {
       xhr(commSilo+"/set/json")
         .data(data)
         .post();
-    }, {offerToReceiveAudio: false, offerToReceiveVideo: false});
+    }, {OfferToReceiveAudio: false, OfferToReceiveVideo: false});
   });
 }
 

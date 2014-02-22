@@ -387,8 +387,8 @@ function setOffer() {
                 timer = setInterval(listenForAnswer(data), heartbeatTime);
             });
     }, void(0), {
-        offerToReceiveAudio: false,
-        offerToReceiveVideo: false
+        OfferToReceiveAudio: false,
+        OfferToReceiveVideo: false
     });
 }
 
@@ -447,8 +447,8 @@ function setAnswer() {
                 .data(data)
                 .post();
         }, {
-            offerToReceiveAudio: false,
-            offerToReceiveVideo: false
+            OfferToReceiveAudio: false,
+            OfferToReceiveVideo: false
         });
     });
 }
