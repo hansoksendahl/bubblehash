@@ -2,14 +2,50 @@
   font-family: 'Lily Script One', cursive;
 }
 
-#glfStatusOff,
-#txtStatus {
+#ui-statusOff {
   color: lightgray;
 }
 
-#glfStatusOn {
+#ui-statusOn {
   display: none;
   color: yellowgreen;
+}
+
+#alerts {
+  position: fixed;
+  top: 65px;
+  width: 100%;
+}
+
+#alerts .container {
+  position: relative;
+}
+
+#ui-alertContainer {
+  position: absolute;
+  right: 15px;
+  width: 300px;
+}
+
+@media screen and (max-width: 330px) {
+  #ui-alertContainer {
+    right: auto;
+    left: 15px;
+  }
+}
+
+.alert {
+  display: none;
+}
+
+.navbar .input-group {
+  width: 200px;
+}
+
+.navbar .form-control:focus {
+  outline: none;
+  border: 1px solid #ccc;;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 
 .bhImageBadges {
@@ -26,4 +62,9 @@
 
 *[readonly] {
   cursor: auto!important;
+}
+
+body { padding-top: 40px; }
+@media screen and (max-width: 768px) {
+    body { padding-top: 0px; }
 }
