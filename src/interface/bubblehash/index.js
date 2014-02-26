@@ -3,5 +3,5 @@ bubblehash = (function () {
 
 import "options";
   
-  return new BubbleHash(options);
+  return new BubbleHash(localStorage.socketId, options);
 }());
