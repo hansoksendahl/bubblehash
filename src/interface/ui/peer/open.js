@@ -36,7 +36,6 @@ var peerOpen = function (id) {
         data.manifest = data.manifest.slice(1)
         manifest.set({manifest: [id].concat(data.manifest) }, log.info("info:manifestUpdate"));
         
-        alert([bubblehash.connections.length, data.manifest.length, bubblehash.connections.length === 0  && data.manifest.length > 0].join(", "))
         if (bubblehash.connections.length === 0  && data.manifest.length > 0) {
           initialConnection();
         };
