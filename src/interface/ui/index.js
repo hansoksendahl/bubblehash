@@ -13,3 +13,7 @@ var ui = (function() {
 }());
 
 import "log/";
+
+import "peer/";
+
+import "connect/";

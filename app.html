@@ -52,21 +52,15 @@
         <a class="navbar-brand bhFancyText" href="./index.html">BubbleHash</a>
       </div>
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        <form class="navbar-form navbar-left">
+        <form class="navbar-form navbar-left" rel="search">
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-btn">
-                <button id="ui-connect" class="btn btn-primary" type="button" data-toggle="tooltip" data-placement="bottom" title="Connect!" rel="tooltip">
-                  <span class="glyphicon glyphicon-cloud-upload"></span>
+                <button id="ui-search" class="btn btn-primary" type="button" data-toggle="tooltip" data-placement="bottom" title="Search BubbleHash" rel="tooltip" disabled>
+                  <span class="glyphicon glyphicon-search"></span>
                 </button>
               </span>
-              <input type="text" id="ui-peerID" class="form-control text-center" data-toggle="tooltip" data-placement="bottom" title="Paste an ID that was sent to you and click Connect!" rel="tooltip">
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="input-group">
-              <span class="input-group-addon">ID</span>
-              <input type="text" id="ui-clientID" class="form-control text-center" readonly data-toggle="tooltip" data-placement="bottom" title="Or send this ID to someone else." rel="tooltip">
+              <input type="text" id="ui-searchQuery" class="form-control text-center" data-toggle="tooltip" data-placement="bottom" title="Enter a key to search for." rel="tooltip" disabled>
             </div>
           </div>
         </form>
@@ -90,7 +84,9 @@
   <!-- Scripts -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>                         <!-- /jQuery -->
   <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script><!-- /Twitter Bootstrap-->
-  <script type="text/javascript" src="./assets/scripts/peer.js"></script><!-- /Peer.js -->
+  <script type="text/javascript" src="./assets/scripts/peer.js"></script>                                     <!-- /Peer.js -->
+  <script type="text/javascript" src="./assets/scripts/uuid.js"></script>                                     <!-- /murmurhash3.js -->
+  <script type="text/javascript" src="./assets/scripts/murmurhash3.js"></script>                              <!-- /murmurhash3.js -->
   <script type="text/javascript" src="./assets/scripts/bubblehash.js"></script>                               <!-- /Bubblehash-->
   <!-- /Scripts -->
 </body>

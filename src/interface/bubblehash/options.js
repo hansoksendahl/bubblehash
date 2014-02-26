@@ -1,6 +1,5 @@
-options.peer = {};
-options.peer.key = "mbv2swgd5tztcsor";
-options.peer.config = {
+options.key = "mbv2swgd5tztcsor";
+options.config = {
   iceServers: [
     {url: "stun:stun4.l.google.com:19302"},
     {url: "stun:stun.l.google.com:19302"},
@@ -24,4 +23,4 @@ options.peer.config = {
     {url: "turn:numb.viagenie.ca:3478", username: "hansoksendahl@gmail.com", credential: "num0mg!!"}
   ]
 };
-options.peer.debug = 3
+options.debug = 3

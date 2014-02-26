@@ -1,4 +1,6 @@
 log = (function () {
+import "Logger/";
+  
   var logger
     , messages = {}
     , i = 0;
@@ -15,23 +17,22 @@ import "messages.js"
     
     function show (e) {
       var alertBox = ui[type].clone()
+        , displayMessage = message
       
       if(Object.prototype.toString.call(e).indexOf("Error") !== -1) {
-        message += e.stack;
+        displayMessage += e.message;
       }
       
       alertBox.attr("id", type+i);
-      alertBox.find(".message").html(message);
+      alertBox.find(".message").html(displayMessage);
       ui.alertContainer.prepend(alertBox);
       alertBox.show().alert();
       
-      if (type !== "danger") {
-        window.setTimeout(function () {
-          alertBox.fadeTo(500, 0).slideUp(500, function(){
-              alertBox.remove();
-          });
-        }, 5000);
-      }
+      window.setTimeout(function () {
+        alertBox.fadeTo(500, 0).slideUp(500, function(){
+            alertBox.remove();
+        });
+      }, 3000);
       
       if (callback) {
         callback.apply(this, arguments);
