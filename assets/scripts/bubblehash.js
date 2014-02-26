@@ -406,11 +406,7 @@ var BubbleHash = (function() {
         };
         options.debug = 3
 
-        if (localStorage.socketId !== void(0)) {
-            return new BubbleHash(localStorage.socketId, options);
-        } else {
-            return new BubbleHash(options);
-        }
+        return new BubbleHash(options);
     }());
 
     manifest = (function() {
@@ -613,9 +609,6 @@ var BubbleHash = (function() {
     }());
 
     var peerOpen = function(id) {
-        // Make the socketId persistent
-        localStorage.socketId = id;
-
         // Request the peer manifest from mudb.org
         manifest.get(log.success("success:manifestGet", function() {
             var data = (this.responseText !== "") ? JSON.parse(this.responseText) : {}, list;
