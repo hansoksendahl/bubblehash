@@ -4,7 +4,9 @@ function peerConnection (dataConnection) {
   ui.search.removeAttr("disabled");
   ui.searchQuery.removeAttr("disabled");
   
-  ui.searchQuery.tooltip("show");
+  if (bubblehash.connections.length <= 1) {
+    ui.searchQuery.tooltip("show");
+  }
   
   // Hide the form fields and update status if connections list is empty.
   dataConnection.once("close", connectClose);
