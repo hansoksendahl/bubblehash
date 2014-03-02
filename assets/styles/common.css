@@ -4,11 +4,19 @@
 
 #ui-statusOff {
   color: lightgray;
+  text-shadow: 0px 0px 2px dimgray;
+}
+
+#ui-statusConnecting {
+  display: none;
+  color: skyblue;
+  text-shadow: 0px 0px 2px dimgray;
 }
 
 #ui-statusOn {
   display: none;
   color: yellowgreen;
+  text-shadow: 0px 0px 2px dimgray;
 }
 
 #alerts {

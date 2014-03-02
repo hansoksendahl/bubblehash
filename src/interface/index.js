@@ -1,68 +1,54 @@
 (function (exports) {
-  // BubbleHash User Interface
-  // -------------------------
+  var cache, bubblehash, bubblehashOptions, notify, xhr
+    , manifest = [];
 
-  // Variables
-  
-  var ui, bubblehash, log, manifest
-    , socketNumber = 50;
+import "XHR/";
 
-import "bubblehash/";
+import "cache.js";
 
-import "manifest/";
+import "bubblehashOptions.js";
 
-import "ui/";
-  
+import "notify/";
+
+import "updateStatus.js";
+
+import "xhr/";
+
+import "peerOpen.js";
+
+import "manifestGet.js"
+
   // Bind some generic UI events.
   (function () {
     // Enable tooltips on form elements.
     $('[rel="tooltip"]').tooltip();
   }());
+
+  bubblehash = new BubbleHash(bubblehashOptions);
   
-  // Bind some events to the peer.
-  bubblehash.peer.on("open", log.success("success:connected", peerOpen));
-  
-  bubblehash.peer.on("connection", log.success("success:recvConnection", peerConnection));
-  
-  bubblehash.peer.on("error", function (err) {
-    switch (err.type) {
-      case "browser-incompatible":
-        log.danger("danger:"+err.type)();
-        break;
-      case "invalid-key":
-        log.danger("danger:"+err.type)();
-        break;
-      case "invalid-id":
-        log.danger("danger:"+err.type)();
-        break;
-      case "unavailable-id":
-        log.danger("danger:"+err.type)();
-        break;
-      case "ssl-unavailable":
-        log.danger("danger:"+err.type)();
-        break;
-      case "server-disconnected":
-        log.danger("danger:"+err.type)();
-        break;
-      case "server-error":
-        log.danger("danger:"+err.type)();
-        break;
-      case "socket-error":
-        log.danger("danger:"+err.type)();
-        break;
-      case "socket-closed":
-        log.danger("danger:"+err.type)();
-        break;
-    }
+  bubblehash.on("peerOpen", function () {
+    notify("success", "connected");
+    updateStatus("connecting");
+    peerOpen();
   });
   
-  // Bind some BubbleHash UI events.
-  ui.search.click(function () {
-    
+  bubblehash.on("peerConnection", function () {
+    notify("success", "recvConnection");
+    updateStatus("on");
   });
   
-  manifest.request.onerror = log.danger("danger:xhrError");
-  manifest.request.ontimeout = log.danger("danger:xhrTimeout");
+  bubblehash.on("peerError", function () {
+    notify("danger", "general");
+    updateStatus("off");
+  });
   
-  log.info("info:welcome")();
+  bubblehash.on("empty", function () {
+    notify("danger", "empty")
+    updateStatus("connecting");
+    peerOpen();
+  })
+  
+  exports.bubblehash = bubblehash;
+  
+  notify("info", "welcome");
 }(this));
