@@ -252,10 +252,38 @@
         });
 
         this.on("connectionData", function(dataConnection, data) {
-            console.log(dataConnection, data);
-
             switch (data.type) {
+                case NOTIFY_SUCCESSOR:
+                    break;
 
+                case NOTIFY_PREDECESSOR:
+                    break;
+
+                case FIND_SUCCESSOR:
+                    if (inHalfOpenRange(message.id, this.self.hash, successor.id)) {
+                        data.type = FOUND_SUCCESSOR;
+                        dataConnection.send(data);
+                    }
+                    break;
+
+                case FOUND_SUCCESSOR:
+                    break;
+                case MESSAGE:
+                    if (message.id) {
+                        if (inHalfOpenRange(message.hash, id, successor.id)) {
+                            delete message.id;
+                            send(this.successor)
+                        } else {
+
+                        }
+                    } else {
+
+                    }
+                    break;
+
+                default:
+                    this._raiseError("messageType");
+                    break;
             }
         });
 
@@ -284,7 +312,8 @@
         "peer-server-disconnected": "The server is disconnected.",
         "peer-server-error": "Unable to reach the server.",
         "peer-socket-error": "Unable to communicate on socket.",
-        "peer-socket-closed": "The socket closed unexpectedly."
+        "peer-socket-closed": "The socket closed unexpectedly.",
+        "messageMype": "Received an unrecognized message type."
     };
     BubbleHash.prototype.hash = function _hash(key, seed) {
         var h, i;
