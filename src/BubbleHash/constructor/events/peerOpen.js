@@ -1,4 +1,4 @@
 this.on("peerOpen", function (id) {
-  this.self = { id: id, hash: this.hash(id) };
-  this.successor = this.self;
+  this._self.metadata.id = this._hash(id);
+  this._successor = this._self;
 });

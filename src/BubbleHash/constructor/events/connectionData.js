@@ -1,36 +1,18 @@
 this.on("connectionData", function (dataConnection, data) {
-  switch(data.type) {
-    case NOTIFY_SUCCESSOR:
-      break;
-      
-    case NOTIFY_PREDECESSOR:
-      break;
-      
-    case FIND_SUCCESSOR:
-      if (inHalfOpenRange(message.id, this.self.hash, successor.id)) {
-        data.type = FOUND_SUCCESSOR;
+  console.log(this._types, this._types[data.type], data);
+  
+  switch (data.type) {
+    case this._types.FIND_SUCCESSOR:
+      if (this._inHalfOpenRange(data.id, this._id("self"), this._id("successor"))) {
+        data.type = this._types.FOUND_SUCCESSOR;
         dataConnection.send(data);
+      } else {
+        this._closestPrecedingNode(data.id).send(data)
       }
+      break;
+    
+    case this._types.FOUND_SUCCESSOR:
       break;
       
-    case FOUND_SUCCESSOR:
-      break;
-    case MESSAGE:
-      if (message.id) {
-        if (inHalfOpenRange(message.hash, id, successor.id)) {
-          delete message.id;
-          send(this.successor)
-        } else {
-          
-        }
-      }
-      else {
-        
-      }
-      break;
-      
-    default:
-      this._raiseError("messageType");
-      break;
   }
 });

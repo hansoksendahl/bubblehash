@@ -203,13 +203,14 @@
         var self = this;
 
         this.peer = new Peer(id, options);
-        this.connections = {};
-        this.predecessor = null;
-        this.predecessorTTL = 0;
-        this.self = null;
-        this.successor = this.self;
-        this.successorTTL = 0;
-        this.fingers = [];
+        this._predecessor = null;
+        this._self = {
+            metadata: {
+                id: null
+            }
+        };
+        this._successor = this._self;
+        this._finger = [];
 
         this.peer.on("error", function(err) {
             self._raiseError("peer-" + err.type);
@@ -222,70 +223,50 @@
         });
 
         this.on("peerOpen", function(id) {
-            this.self = {
-                id: id,
-                hash: this.hash(id)
-            };
-            this.successor = this.self;
+            this._self.metadata.id = this._hash(id);
+            this._successor = this._self;
         });
 
         this.on("peerConnection", function(dataConnection) {
             this._bindDataConnection(dataConnection);
         });
 
-        this.on("connectionOpen", function(dataConnection) {
-            this.connections[dataConnection.peer] = dataConnection;
-        });
-
         this.on("connectionClose", function(dataConnection) {
-            var key;
-
-            for (key in this.connections) {
-                if (this.connections[key].open === false) {
-                    delete this.connections[key];
-                }
-            }
-
-            if (Object.keys(this.connections).length === 0) {
+            if (this._finger.length === 0) {
                 this.emit("empty");
             }
         });
 
         this.on("connectionData", function(dataConnection, data) {
+            console.log(this._types, this._types[data.type], data);
+
             switch (data.type) {
-                case NOTIFY_SUCCESSOR:
-                    break;
-
-                case NOTIFY_PREDECESSOR:
-                    break;
-
-                case FIND_SUCCESSOR:
-                    if (inHalfOpenRange(message.id, this.self.hash, successor.id)) {
-                        data.type = FOUND_SUCCESSOR;
+                case this._types.FIND_SUCCESSOR:
+                    if (this._inHalfOpenRange(data.id, this._id("self"), this._id("successor"))) {
+                        data.type = this._types.FOUND_SUCCESSOR;
                         dataConnection.send(data);
-                    }
-                    break;
-
-                case FOUND_SUCCESSOR:
-                    break;
-                case MESSAGE:
-                    if (message.id) {
-                        if (inHalfOpenRange(message.hash, id, successor.id)) {
-                            delete message.id;
-                            send(this.successor)
-                        } else {
-
-                        }
                     } else {
-
+                        this._closestPrecedingNode(data.id).send(data)
                     }
                     break;
 
-                default:
-                    this._raiseError("messageType");
+                case this._types.FOUND_SUCCESSOR:
                     break;
+
             }
         });
+
+        setInterval(function fix_fingers() {
+            send(successor, {
+                type: FIND_SUCCESSOR,
+                id: addExp(id, nextFinger + 1),
+                next: nextFinger
+            });
+            nextFinger += 13;
+            if (nextFinger >= 127) {
+                nextFinger -= 127;
+            }
+        }, 600).unref();
 
         return this;
     }
@@ -293,8 +274,9 @@
     util.inherits(BubbleHash, EventEmitter);
 
     BubbleHash.prototype._raiseError = function _raiseError(code) {
-        this.emit("error", new Error(this._messages[code] || code));
+        this.emit("error", new Error(this._errorMessages[code] || code));
     };
+
     BubbleHash.prototype._raiseEvent = function _raiseEvent() {
         var self = this,
             args = util.args(arguments);
@@ -303,7 +285,8 @@
             self.emit.apply(self, args.concat(util.args(arguments)));
         };
     };
-    BubbleHash.prototype._messages = {
+
+    BubbleHash.prototype._errorMessages = {
         "peer-browser-incompatible": "Your browser incompatible with BubbleHash.",
         "peer-invalid-key": "Invalid key for Peer.js cloud.",
         "peer-invalid-id": "Invalid ID specified for websocket.",
@@ -315,7 +298,8 @@
         "peer-socket-closed": "The socket closed unexpectedly.",
         "messageMype": "Received an unrecognized message type."
     };
-    BubbleHash.prototype.hash = function _hash(key, seed) {
+
+    BubbleHash.prototype._hash = function _hash(key, seed) {
         var h, i;
 
         h = murmurHash3.x86.hash128(key, seed)
@@ -327,67 +311,66 @@
         }
 
         return h;
-    }
-    // Is key in (low, high)
-    BubbleHash.prototype._inRange = function _inRange(key, low, high) {
-        //return (low < high && key > low && key < high) ||
-        //    (low > high && (key > low || key < high)) ||
-        //    (low === high && key !== low);
-        return (this._lessThan(low, high) && this._lessThan(low, key) && this._lessThan(key, high)) || (this._lessThan(high, low) && (this._lessThan(low, key) || this._lessThan(key, high))) || (this._equalTo(low, high) && !this._equalTo(key, low));
-    }
-    // Is key in (low, high]
-    BubbleHash.prototype._inHalfOpenRange = function _inHalfOpenRange(key, low, high) {
-        //return (low < high && key > low && key <= high) ||
-        //    (low > high && (key > low || key <= high)) ||
-        //    (low == high);
-        return (this._lessThan(low, high) && this._lessThan(low, key) && this._lessThanOrEqual(key, high)) || (this._lessThan(high, low) && (this._lessThan(low, key) || this._lessThanOrEqual(key, high))) || (this._equalTo(low, high));
-    }
-    // Key comparison
-    BubbleHash.prototype._lessThan = function _lessThan(low, high) {
-        if (low.length !== high.length) {
-            // Arbitrary comparison
-            return low.length < high.length;
-        }
+    };
 
-        for (var i = 0; i < low.length; ++i) {
-            if (low[i] < high[i]) {
-                return true;
-            } else if (low[i] > high[i]) {
-                return false;
-            }
-        }
+    BubbleHash.prototype._connect = function _connect(id, options) {
+        options = options || {}
+        options.metadata = options.metadata || {};
+        console.log(this._id("self"));
+        options.metadata.id = this._id("self");
 
-        return false;
+        // Create a data connection
+        var dataConnection = this.peer.connect(id, options)
+
+        return this._bindDataConnection(dataConnection);
+    };
+
+    BubbleHash.prototype.join = function join(id, options) {
+        // Create a data connection
+        var dataConnection = this._connect(id, options),
+            self = this;
+
+        // Clear the predecessor
+        this._predecessor = null;
+
+        // Bing an event to the data connection's `open` event which will send a Chord
+        // `FIND_SUCCESSOR` event.
+        dataConnection.once("open", function() {
+            dataConnection.send({
+                type: self._types.FIND_SUCCESSOR,
+                id: self._id("self")
+            });
+        });
+
+
+        return dataConnection;
+    };
+
+    BubbleHash.prototype._bindDataConnection = function _bindDataConnection(dataConnection) {
+        var self = this;
+
+        // Bind event listeners for each named `event` to `dataConnection`.
+        ["Data", "Open", "Close"].forEach(function(event) {
+            dataConnection.on(
+                event.toLowerCase(),
+                self._raiseEvent(
+                    "connection" + event,
+                    dataConnection
+                )
+            );
+        });
+
+        return dataConnection;
     }
-    BubbleHash.prototype._lessThanOrEqual = function _lessThanOrEqual(low, high) {
-        if (low.length !== high.length) {
-            // Arbitrary comparison
-            return low.length <= high.length;
-        }
 
-        for (var i = 0; i < low.length; ++i) {
-            if (low[i] < high[i]) {
-                return true;
-            } else if (low[i] > high[i]) {
-                return false;
-            }
-        }
+    BubbleHash.prototype._types = {
+        "NOTIFY_PREDECESSOR": 0,
+        "NOTIFY_SUCCESSOR": 1,
+        "FIND_SUCCESSOR": 2,
+        "FOUND_SUCCESSOR": 3,
+        "MESSAGE": 4
+    };
 
-        return true;
-    }
-    BubbleHash.prototype._equalTo = function _equalTo(a, b) {
-        if (a.length !== b.length) {
-            return false;
-        }
-
-        for (var i = 0; i < a.length; ++i) {
-            if (a[i] !== b[i]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
     // Computes a new key equal to key + 2 ^ exponent.
     // Assumes key is a 4 element array of 32 bit words, most significant word first.
     BubbleHash.prototype._addExp = function _addExp(key, exponent) {
@@ -408,30 +391,81 @@
 
         return result;
     }
+
+    BubbleHash.prototype._equalTo = function _equalTo(a, b) {
+        if (a.length !== b.length) {
+            return false;
+        }
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Is key in (low, high]
+    BubbleHash.prototype._inHalfOpenRange = function _inHalfOpenRange(key, low, high) {
+        //return (low < high && key > low && key <= high) ||
+        //    (low > high && (key > low || key <= high)) ||
+        //    (low == high);
+        return (this._lessThan(low, high) && this._lessThan(low, key) && this._lessThanOrEqual(key, high)) || (this._lessThan(high, low) && (this._lessThan(low, key) || this._lessThanOrEqual(key, high))) || (this._equalTo(low, high));
+    }
+
+    // Is key in (low, high)
+    BubbleHash.prototype._inRange = function _inRange(key, low, high) {
+        //return (low < high && key > low && key < high) ||
+        //    (low > high && (key > low || key < high)) ||
+        //    (low === high && key !== low);
+        return (this._lessThan(low, high) && this._lessThan(low, key) && this._lessThan(key, high)) || (this._lessThan(high, low) && (this._lessThan(low, key) || this._lessThan(key, high))) || (this._equalTo(low, high) && !this._equalTo(key, low));
+    }
+
+    // Key comparison
+    BubbleHash.prototype._lessThan = function _lessThan(low, high) {
+        if (low.length !== high.length) {
+            // Arbitrary comparison
+            return low.length < high.length;
+        }
+
+        for (var i = 0; i < low.length; ++i) {
+            if (low[i] < high[i]) {
+                return true;
+            } else if (low[i] > high[i]) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    BubbleHash.prototype._lessThanOrEqual = function _lessThanOrEqual(low, high) {
+        if (low.length !== high.length) {
+            // Arbitrary comparison
+            return low.length <= high.length;
+        }
+
+        for (var i = 0; i < low.length; ++i) {
+            if (low[i] < high[i]) {
+                return true;
+            } else if (low[i] > high[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     BubbleHash.prototype._nextKey = function _nextKey(key) {
         return this._addExp(key, 0);
     }
-    BubbleHash.prototype.connect = function connect(id, options) {
-        var dataConnection = this.peer.connect(id, options),
-            self = this;
 
-        this._bindDataConnection(dataConnection);
-
-        return dataConnection;
+    BubbleHash.prototype._id = function _id(string, i) {
+        return (
+            (arguments.length > 1) ? this["_" + string][i] : this["_" + string]
+        ).metadata.id;
     };
-    BubbleHash.prototype._bindDataConnection = function _bindDataConnection(dataConnection) {
-        var self = this;
-
-        ["Data", "Open", "Close"].forEach(function(e) {
-            dataConnection.on(
-                e.toLowerCase(),
-                self._raiseEvent(
-                    "connection" + e,
-                    dataConnection
-                )
-            );
-        });
-    }
 
     exports.RTCSessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
     exports.RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection || window.RTCPeerConnection;
@@ -670,9 +704,9 @@
     };
 
     var manifestGet = function() {
-        var data = (this.responseText !== "") ? JSON.parse(this.responseText) : {}, dataConnection;
+        var data = (this.responseText !== "") ? JSON.parse(this.responseText) : {};
 
-        notify("success", "manifestGet")
+        notify("success", "manifestGet");
 
         // Initialize the manifest array
         data.manifest = data.manifest || [];
@@ -680,42 +714,32 @@
         // Filter out any duplicates
         data.manifest =
             data.manifest.filter(function(e) {
-                return e !== bubblehash.self.id;
+                return e !== bubblehash.peer.id;
             });
 
-        manifest = data.manifest;
-
-        xhr.set({
-                manifest: [bubblehash.self.id].concat(manifest)
-            },
-            function() {
-                notify("info", "manifestUpdate");
-            }
-        );
-
         (function initialConnection() {
-            dataConnection = bubblehash.connect(manifest[0]);
+            var dataConnection = bubblehash.join(data.manifest[0]);
+
+            xhr.set({
+                    manifest: [bubblehash.peer.id].concat(data.manifest)
+                },
+                function() {
+                    notify("info", "manifestUpdate");
+                }
+            );
 
             dataConnection.once("open", function() {
                 updateStatus("on");
                 notify("success", "createConnection");
             });
 
-            bubblehash.on("error", function(e) {
-                data.manifest = data.manifest.slice(1);
-
-                if (Object.keys(this.connections).length === 0) {
-                    xhr.set({
-                            manifest: [bubblehash.self.id].concat(data.manifest)
-                        },
-                        function() {
-                            notify("info", "manifestUpdate");
-                        }
-                    );
-
-                    if (data.manifest.length > 0) {
-                        initialConnection();
-                    }
+            bubblehash.once("error", function(e) {
+                if (
+                    this._finger.length === 0 &&
+                    data.manifest.length > 0
+                ) {
+                    data.manifest = data.manifest.slice(1);
+                    initialConnection();
                 }
             });
         }());
@@ -745,11 +769,11 @@
         updateStatus("off");
     });
 
-    bubblehash.on("empty", function() {
-        notify("danger", "empty")
-        updateStatus("connecting");
-        peerOpen();
-    })
+    // bubblehash.on("empty", function () {
+    //   notify("danger", "empty")
+    //   updateStatus("connecting");
+    //   peerOpen();
+    // })
 
     exports.bubblehash = bubblehash;
 

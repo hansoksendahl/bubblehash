@@ -1,8 +1,7 @@
 var manifestGet = function () {
-  var data = (this.responseText !== "") ? JSON.parse(this.responseText) : {}
-    , dataConnection;
+  var data = (this.responseText !== "") ? JSON.parse(this.responseText) : {};
 
-  notify("success", "manifestGet")
+  notify("success", "manifestGet");
 
   // Initialize the manifest array
   data.manifest = data.manifest || [];
@@ -10,40 +9,31 @@ var manifestGet = function () {
   // Filter out any duplicates
   data.manifest =
   data.manifest.filter(function (e) {
-    return e !== bubblehash.self.id;
+    return e !== bubblehash.peer.id;
   });
   
-  manifest = data.manifest;
-  
-  xhr.set(
-    { manifest: [bubblehash.self.id].concat(manifest) },
-    function () {
-      notify("info", "manifestUpdate");
-    }
-  );
-  
   (function initialConnection () {
-    dataConnection = bubblehash.connect(manifest[0]);
+    var dataConnection = bubblehash.join(data.manifest[0]);
+    
+    xhr.set(
+      { manifest: [bubblehash.peer.id].concat(data.manifest) },
+      function () {
+        notify("info", "manifestUpdate");
+      }
+    );
     
     dataConnection.once("open", function () {
       updateStatus("on");
       notify("success", "createConnection");
     });
     
-    bubblehash.on("error", function (e) {
-      data.manifest = data.manifest.slice(1);
-      
-      if (Object.keys(this.connections).length === 0) {
-        xhr.set(
-          { manifest: [bubblehash.self.id].concat(data.manifest) },
-          function () {
-            notify("info", "manifestUpdate");
-          }
-        );
-      
-        if (data.manifest.length > 0) {
-          initialConnection();
-        }
+    bubblehash.once("error", function (e) {
+      if (
+        this._finger.length === 0 &&
+        data.manifest.length > 0
+      ) {
+        data.manifest = data.manifest.slice(1);
+        initialConnection();
       }
     });
   }());

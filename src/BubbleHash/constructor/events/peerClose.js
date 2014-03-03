@@ -1,4 +1,6 @@
 this.on("peerClose", function () {
-  this.self = null;
-  this.successor = self;
+  this._self = { metadata: { id: null }};
+  this._successor = this._self;
+  this._predecessor = null;
+  this._finger = [];
 });

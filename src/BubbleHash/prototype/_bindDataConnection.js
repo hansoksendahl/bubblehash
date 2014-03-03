@@ -1,13 +1,16 @@
 BubbleHash.prototype._bindDataConnection = function _bindDataConnection (dataConnection) {
   var self = this;
   
-  ["Data", "Open", "Close"].forEach(function (e) {
+  // Bind event listeners for each named `event` to `dataConnection`.
+  ["Data", "Open", "Close"].forEach(function (event) {
     dataConnection.on(
-      e.toLowerCase(),
+      event.toLowerCase(),
       self._raiseEvent(
-        "connection"+e,
+        "connection"+event,
         dataConnection
       )
     );
   });
+  
+  return dataConnection;
 }

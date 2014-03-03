@@ -42,11 +42,11 @@ import "manifestGet.js"
     updateStatus("off");
   });
   
-  // bubblehash.on("empty", function () {
-  //   notify("danger", "empty")
-  //   updateStatus("connecting");
-  //   peerOpen();
-  // })
+  bubblehash.on("empty", function () {
+    notify("danger", "empty")
+    updateStatus("connecting");
+    peerOpen();
+  })
   
   exports.bubblehash = bubblehash;
   
