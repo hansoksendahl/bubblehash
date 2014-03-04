@@ -12,5 +12,12 @@ BubbleHash.prototype._bindDataConnection = function _bindDataConnection (dataCon
     );
   });
   
+  // From my understanding peer.js dataConnection objects do not report a type
+  // on their error objects.  As such we just pass them directly to the
+  // BubbleHash error handler.
+  dataConnection.on("error", function (err) {
+    this._raiseError(err);
+  });
+  
   return dataConnection;
 }

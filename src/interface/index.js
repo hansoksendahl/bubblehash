@@ -1,6 +1,8 @@
 (function (exports) {
   var cache, bubblehash, bubblehashOptions, notify, xhr
     , manifest = [];
+    
+import "dependencyCheck.js";
 
 import "XHR/";
 
