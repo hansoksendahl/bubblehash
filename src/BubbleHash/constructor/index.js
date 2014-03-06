@@ -9,6 +9,7 @@ function BubbleHash (id, options) {
   this.predecessor = null;
   this.successor = this.self;
   this.fingers = [];
+  this.succesorList = [];
   
   this.peer.on("error", function (error) {
     self._raiseError(error.type ? "peer-"+error.type : error);

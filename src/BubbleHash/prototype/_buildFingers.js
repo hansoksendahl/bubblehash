@@ -8,8 +8,6 @@ BubbleHash.prototype._buildFingers = function _buildFingers (s) {
     , i;
     
   i_0 = util.logMinus(this.successor.hash, this.self.hash) + 1;
-  
-  console.log(i_0)
 
   for (i = i_0; i < this.fingers.length - 1; i += 1) {
     if (s.peer !== this.peer.id) {

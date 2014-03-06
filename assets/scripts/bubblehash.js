@@ -262,8 +262,6 @@
             sum += sub ? Math.log(sub) : 0;
         }
 
-        console.log(a, sum)
-
         return sum ? Math.floor(sum / log_2) : 0;
     };
 
@@ -397,7 +395,9 @@
         });
 
         this.on("foundSuccessor", function(dataConnection, data) {
-            this.fingers[data.peer] = this._connect(data.peer);
+            if (!this.peer.connections[data.peer]) {
+                this.fingers[data.peer] = this._connect(data.peer);
+            }
         });
 
         this.on("error", function _cleanUp() {
@@ -486,7 +486,7 @@
             });
 
             self.once("foundSuccessor", function(dataConnection, data) {
-                self.successor = self._connect(data.peer);
+                self.successor = dataConnection
                 self._buildFingers(self.successor);
                 self._fixFingers();
             });
@@ -551,8 +551,6 @@
         var i_0, i;
 
         i_0 = util.logMinus(this.successor.hash, this.self.hash) + 1;
-
-        console.log(i_0)
 
         for (i = i_0; i < this.fingers.length - 1; i += 1) {
             if (s.peer !== this.peer.id) {

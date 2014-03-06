@@ -14,7 +14,7 @@ BubbleHash.prototype.join = function join (id, options) {
     });
     
     self.once("foundSuccessor", function (dataConnection, data) {
-      self.successor = self._connect(data.peer);
+      self.successor = dataConnection
       self._buildFingers(self.successor);
       self._fixFingers();
     });

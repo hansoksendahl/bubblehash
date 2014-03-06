@@ -1,8 +1,8 @@
 // Computes a new key equal to key + 2 ^ exponent.
 // Assumes key is a 4 element array of 32 bit words, least significant word first.
 BubbleHash.prototype._addExp = function _addExp (key, exponent) {
-  var result = key.concat(); // copy array
-  var index = Math.floor(exponent / 32);
+  var result = key.concat()
+    , index = Math.floor(exponent / 32);
 
   result[index] += 1 << (exponent % 32);
 

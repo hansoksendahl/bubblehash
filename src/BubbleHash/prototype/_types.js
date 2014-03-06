@@ -2,5 +2,9 @@ BubbleHash.prototype._types = {
   "NOTIFY_SUCCESSOR": 0,
   "FIND_SUCCESSOR": 1,
   "FOUND_SUCCESSOR": 2,
-  "MESSAGE": 3
+  "FIND_PREDECESSOR": 3,
+  "FOUND_PREDECESSOR": 4,
+  "GET_SUCCESSOR_LIST": 5,
+  "GOT_SUCCESSOR_LIST": 6,
+  "MESSAGE": 7
 };

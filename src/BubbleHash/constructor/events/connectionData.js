@@ -14,6 +14,18 @@ this.on("connectionData", function (dataConnection, data) {
     case this._types.FOUND_SUCCESSOR:
       event = "foundSuccessor";
       break;
+    case this._types.FIND_PREDECESSOR:
+      event = "findPredecessor";
+      break;
+    case this._types.FOUND_PREDECESSOR:
+      event = "foundPredecessor";
+      break;
+    case this._types.GET_SUCCESSOR_LIST:
+      event = "getSuccesorList";
+      break;
+    case this._types.GOT_SUCCESSOR_LIST:
+      event = "gotSuccessorList";
+      break;
     case this._types.MESSAGE:
       event = "message";
       break;
