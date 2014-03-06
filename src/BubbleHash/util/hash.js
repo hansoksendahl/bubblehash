@@ -1,4 +1,4 @@
-BubbleHash.prototype.hash = function _hash (key, seed) {
+util.hash = function hash (key, seed) {
   var h, i;
   
   h = murmurHash3.x86.hash128(key, seed)
@@ -10,4 +10,4 @@ BubbleHash.prototype.hash = function _hash (key, seed) {
   }
   
   return h;
-}
+};

@@ -1,4 +1,4 @@
-this.on("connectionClose", function _cleanUp () {
+this.on("error", function _cleanUp () {
   var id
     , live;
   
@@ -11,6 +11,9 @@ this.on("connectionClose", function _cleanUp () {
     this.peer.connections[id] = this.peer.connections[id].filter(function (dataConnection) {
       if (dataConnection.open) {
         return true;
+      }
+      else {
+        dataConnection.emit("error");
       }
     });
     if (this.peer.connections[id].length === 0) {

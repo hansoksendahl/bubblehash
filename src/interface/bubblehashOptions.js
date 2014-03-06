@@ -24,4 +24,4 @@ bubblehashOptions.config = {
     {url: "turn:numb.viagenie.ca:3478", username: "hansoksendahl@gmail.com", credential: "num0mg!!"}
   ]
 };
-bubblehashOptions.debug = 3;
+bubblehashOptions.debug = 0;

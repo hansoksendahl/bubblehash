@@ -4,17 +4,21 @@ BubbleHash.prototype.join = function join (id, options) {
     , self = this;
   
   // Clear the predecessor
-  this._predecessor = null;
+  this.predecessor = null;
   
   // Bing an event to the data connection's `open` event which will send a Chord
   // `FIND_SUCCESSOR` event.
   dataConnection.once("open", function () {
     dataConnection.send({
-      type: self._types.FIND_SUCCESSOR,
-      id: self._id("self")
+      type: self._types.FIND_SUCCESSOR
+    });
+    
+    self.once("foundSuccessor", function (dataConnection, data) {
+      self.successor = self._connect(data.peer);
+      self._buildFingers(self.successor);
+      self._fixFingers();
     });
   });
-  
-  
+    
   return dataConnection;
 };

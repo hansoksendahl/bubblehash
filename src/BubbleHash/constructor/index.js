@@ -2,30 +2,27 @@ function BubbleHash (id, options) {
   var self = this;
   
   this.peer = new Peer(id, options);
-  this._predecessor = null;
-  this._self = { metadata: { id: null } };
-  this._successor = this._self;
-  this._finger = [];
+  this.self = {
+    peer: null,
+    hash: null
+  }
+  this.predecessor = null;
+  this.successor = this.self;
+  this.fingers = [];
   
-  this.peer.on("error", function (err) {
-    self._raiseError("peer-"+err.type);
+  this.peer.on("error", function (error) {
+    self._raiseError(error.type ? "peer-"+error.type : error);
   });
   
   EventEmitter.call(this);
   
+  // Bind the following peer.js events to their corresponding BubbleHash event
+  // handlers.
   ["Open", "Connection", "Call", "Close"].forEach(function (e) {
     self.peer.on(e.toLowerCase(), self._raiseEvent("peer"+e));
   });
   
 import "events/";
-
-  setInterval(function fix_fingers() {
-      send(successor, {type: FIND_SUCCESSOR, id: addExp(id, nextFinger + 1), next: nextFinger});
-      nextFinger += 13;
-      if (nextFinger >= 127) {
-          nextFinger -= 127;
-      }
-  }, 600).unref();
 
   return this;
 }

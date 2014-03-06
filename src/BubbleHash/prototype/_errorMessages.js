@@ -8,5 +8,5 @@ BubbleHash.prototype._errorMessages = {
   "peer-server-error": "Unable to reach the server.",
   "peer-socket-error": "Unable to communicate on socket.",
   "peer-socket-closed": "The socket closed unexpectedly.",
-  "messageMype": "Received an unrecognized message type."
+  "messageType": "Received an unrecognized message type."
 };

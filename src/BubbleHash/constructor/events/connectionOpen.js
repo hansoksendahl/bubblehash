@@ -1,3 +1,4 @@
 this.on("connectionOpen", function (dataConnection) {
-  this.connections[dataConnection.peer] = dataConnection;
+  dataConnection.hash = util.hash(dataConnection.peer);
+  this._fixFingers();
 });

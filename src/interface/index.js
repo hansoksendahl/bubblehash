@@ -29,7 +29,7 @@ import "manifestGet.js"
   bubblehash = new BubbleHash(bubblehashOptions);
   
   bubblehash.on("peerOpen", function () {
-    notify("success", "connected");
+    notify("success", "socket");
     updateStatus("connecting");
     peerOpen();
   });
@@ -39,16 +39,9 @@ import "manifestGet.js"
     updateStatus("on");
   });
   
-  bubblehash.on("peerError", function () {
-    notify("danger", "general");
-    updateStatus("off");
+  bubblehash.on("error", function (err) {
+    console.error(err);
   });
-  
-  // bubblehash.on("empty", function () {
-  //   notify("danger", "empty")
-  //   updateStatus("connecting");
-  //   peerOpen();
-  // })
   
   exports.bubblehash = bubblehash;
   

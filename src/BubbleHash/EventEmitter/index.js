@@ -51,7 +51,7 @@ EventEmitter.prototype.once = function(type, listener, scope) {
   var self = this;
   function g() {
     self.removeListener(type, g);
-    listener.apply(this, arguments);
+    return listener.apply(this, arguments);
   }
 
   g.listener = listener;
@@ -152,7 +152,9 @@ EventEmitter.prototype.emit = function(type) {
 
     var listeners = handler.slice();
     for (i = 0, l = listeners.length; i < l; i++) {
-      listeners[i].apply(this, args);
+      if (listeners[i].apply(this, args) === false) {
+        break;
+      }
     }
     return true;
   } else {
