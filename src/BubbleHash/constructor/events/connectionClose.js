@@ -2,12 +2,15 @@ this.on("connectionClose", function _cleanUp () {
   var id
     , live;
   
+  // TODO
+  // Remove this code and delegate to `_fixFingers`
+  this.fingers = this.fingers.filter(function (dataConnection) {
+    if (dataConnection.open) {
+      return true;
+    }
+  });
+  
   for (id in this.peer.connections) {
-    this.fingers = this.fingers.filter(function (dataConnection) {
-      if (dataConnection.open) {
-        return true;
-      }
-    });
     this.peer.connections[id] = this.peer.connections[id].filter(function (dataConnection) {
       if (dataConnection.open) {
         return true;

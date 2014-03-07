@@ -1,3 +1,6 @@
+// periodically refresh finger table entries
+//
+//     buildFingers(n);
 BubbleHash.prototype._fixFingers = function _fixFingers () {
   var self
   
