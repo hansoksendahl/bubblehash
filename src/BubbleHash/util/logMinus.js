@@ -1,6 +1,10 @@
 // FIXME
-// Since `log₂(h₁-h₂) ∈ {x|0<x<2¹²⁸}` and we are restricted to 32 bit unsigned
-// integers we cannot easily calculate the actual value of log₂(h₁-h₂).
+// Since `(h₁ - h₂) ∈ {x|0≤x<2¹²⁸-1}` and we are restricted to 32 bit unsigned
+// integers we cannot easily calculate the actual value of h₁ - h₂.
+//
+// While the following may be true by careful manipulation of string based
+// exponential notation we can represent these values with enough precision to
+// accurately calculate the value of `log(h₁ - h₂)`.
 //
 // The method currently used is a bit of a hack.  It takes the most significant
 // chunk not equal to zero from h₁-h₂ and uses Javascript exponential notation
