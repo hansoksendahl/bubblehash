@@ -1,4 +1,3 @@
-// FIXME
 // Since `(h₁ - h₂) ∈ {x|0≤x<2¹²⁸-1}` and we are restricted to 32 bit unsigned
 // integers we cannot easily calculate the actual value of h₁ - h₂.
 //
@@ -58,7 +57,7 @@ util.logMinus = function (h_1, h_2) {
     if (a[i] > 0 || buffer.length > 0) {
       // Convert the zero-padded number to hclexadecimal and add it to the
       // buffer.
-      hex = (buffer.length ? (a[i]).toString(16).slice(-8) : a[i].toString(16));
+      hex = (buffer.length ? ("00000000"+a[i]).toString(16).slice(-8) : a[i].toString(16));
       buffer = (buffer + hex).slice(0, 8);
       // Record the index of the first encountered non-zero 32 bit chunk.
       enc = enc || i;
