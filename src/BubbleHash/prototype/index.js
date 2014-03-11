@@ -1,21 +1,37 @@
-import "_raiseError.js";
+import "types.js";
 
-import "_raiseEvent.js";
-
-import "_errorMessages.js";
-
-import "_connect.js";
+import "connect.js";
 
 import "join.js";
 
-import "_bindDataConnection.js";
+import "bindDataConnection.js";
 
-import "_closestPrecedingNode.js";
+import "log.js";
 
-import "_types.js";
+// import "onNotify.js";
 
-import "_buildFingers.js";
+import "onFindSuccessor.js";
 
-import "_addExp.js";
+// import "onFoundSuccessor";
 
-import "_fixFingers.js";
+// import "onFindPredecessor.js";
+
+// // import "onFoundPredecessor";
+
+// import "onGetSuccessorList.js";
+
+// // import "onGotSuccessorList";
+
+// import "onMessage.js";
+
+import "closestPrecedingNode.js";
+
+import "buildFingers.js";
+
+import "fixFingers.js";
+
+import "stabilization.js";
+
+// import "checkPredecessor.js";
+
+// import "fixSuccessorList.js";

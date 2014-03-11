@@ -1,0 +1,11 @@
+messages.welcome = "BubbleHash by OX-Design.";
+messages.socket = "Connected to websocket.";
+messages.manifestUpdate = "Updated peer manifest.";
+messages.searching = "Searching for peers.";
+messages.general = "An error occured.\n\n";
+messages.recvConnection = "Remote dataconnection received!";
+messages.xhrError = "Could not request manifest file.";
+messages.xhrTimeout = "Timed out while requesting manifest file.";
+messages.manifestGet = "Got peer manifest.";
+messages.connection = "Connected to BubbleHash!";
+messages.empty = "Lost connection to BubbleHash!";

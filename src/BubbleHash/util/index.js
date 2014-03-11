@@ -11,3 +11,5 @@ import "equalTo.js";
 import "hash.js";
 
 import "logMinus.js";
+
+import "addExp.js";
