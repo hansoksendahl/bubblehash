@@ -52,7 +52,7 @@ util.logMinus = function (h_1, h_2) {
   }
   
   // Capture a buffer of hexadecimal characters and calculate the exponent.
-  // Changing the exponent form base₂ to base₁₀.
+  // Changing the exponent from base₂ to base₁₀.
   for (i = a.length - 1; i >= 0; i -= 1) {
     if (a[i] > 0 || buffer.length > 0) {
       // Convert the zero-padded number to hclexadecimal and add it to the
