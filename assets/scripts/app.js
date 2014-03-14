@@ -265,31 +265,41 @@
             }
         );
 
-        (function initialConnection() {
+        // FIXME
+        // This is a hack since Peer.js does note currently pass connection
+        // errors to the Data Connection object.
+        function retry() {
+            data.manifest = data.manifest.slice(1);
+            updateStatus("connecting");
+
+            if (data.manifest.length > 0) {
+                notify("info", "searching");
+                initialConnection();
+            } else {
+                peerOpen();
+            }
+        }
+
+        function initialConnection() {
             var dataConnection = bubblehash.join(data.manifest[0]);
 
-            // // FIXME
-            // // This is a hack since Peer.js does note currently pass connection
-            // // errors to the Data Connection object.
-            function retry(error) {
-                data.manifest = data.manifest.slice(1);
-                updateStatus("connecting");
-
-                if (data.manifest.length > 0) {
-                    notify("info", "searching");
-                    initialConnection();
-                } else {
-                    peerOpen();
-                }
-            }
-
-            dataConnection.once("close", retry);
+            dataConnection.once("error", retry);
 
             dataConnection.once("open", function() {
+                bubblehash.peer.removeListener("error", retry);
+                dataConnection.removeListener("close", retry);
+
+                bubblehash.once("empty", function() {
+                    updateStatus("connecting");
+                    peerOpen();
+                });
+
                 updateStatus("on");
                 notify("success", "connection");
             });
-        }());
+        }
+
+        initialConnection();
     };
 
     // Bind some generic UI events.
@@ -300,7 +310,7 @@
 
     bubblehash = new BubbleHash(bubblehashOptions);
 
-    bubblehash.peer.once("open", function() {
+    bubblehash.peer.on("open", function() {
         notify("success", "socket");
         updateStatus("connecting");
         peerOpen();
@@ -310,10 +320,6 @@
         notify("success", "recvConnection");
         updateStatus("on");
     });
-
-    // bubblehash.on("error", function (err) {
-    //   console.error(err);
-    // });
 
     exports.bubblehash = bubblehash;
 

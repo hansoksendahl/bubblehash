@@ -1,0 +1,159 @@
+[
+  {
+    "name": "BubbleHash",
+    "type": "constructor",
+    "snippet": "var bubblehash = new BubbleHash([id], [options]);",
+    "description": "A BubbleHash instance creates a Chord distributed hash table implemented using peer.js.",
+    "children": [
+      {
+        "name": "id",
+        "optional": true,
+        "type": "string",
+        "description": "The <code>id</code> of some other peer."
+      },
+      {
+        "name": "options",
+        "optional": true,
+        "type": "object",
+        "children": [
+          {
+            "type": "boolean",
+            "description": "Sets whether BubbleHash should log messages sent between clients.  <em>Note: setting options.log to true can produce an alarming amount of console output.</em>",
+            "optional": true,
+            "name": "log"
+          },
+          {
+            "name": "peer",
+            "description": "Options for the underlying peer.js connections.",
+            "optional": true,
+            "type": "object",
+            "children": [
+              {
+                "name": "port",
+                "type": "number",
+                "description": "Server port. Defaults to <code>80</code>."
+              },
+              {
+                "name": "key",
+                "type": "string",
+                "description": "API key for the cloud PeerServer. This is not used for servers other than <code>0.peerjs.com</code>.<span class='warn'>PeerServer cloud runs on port 9000. Please ensure it is not blocked or consider running your own PeerServer instead.</span>"
+              },
+              {
+                "name": "path",
+                "type": "string",
+                "description": "The path where your self-hosted PeerServer is running. Defaults to <code>'/'</code>."
+              },
+              {
+                "name": "host",
+                "type": "string",
+                "description": "Server host. Defaults to <code>0.peerjs.com</code>. Also accepts <code>'/'</code> to signify relative hostname."
+              },
+              {
+                "name": "secure",
+                "type": "boolean",
+                "description": "<code>true</code> if you're using SSL.<span class='tip'>Note that our cloud-hosted server and assets may not support SSL.</span>"
+              },
+              {
+                "name": "config",
+                "type": "object",
+                "description": "Configuration hash passed to RTCPeerConnection. This hash contains any custom ICE/TURN server configuration. Defaults to <code>{ 'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }] }</code>"
+              },
+              {
+                "name": "debug",
+                "type": "number",
+                "description": "Prints log messages depending on the debug level passed in. Defaults to <code>0</code>.",
+                "children": [
+                  {
+                    "name": 0,
+                    "description": "Prints no logs."
+                  },
+                  {
+                    "name": 1,
+                    "description": "Prints only errors."
+                  },
+                  {
+                    "name": 2,
+                    "description": "Prints errors and warnings."
+                  },
+                  {
+                    "name": 3,
+                    "description": "Prints all logs."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "interval",
+            "optional": true,
+            "type": "object",
+            "children": [
+              {
+                "description": "The interval (in seconds) for the stabilize process.",
+                "name": "stabilize",
+                "optional": true,
+                "type": "number"
+              },
+              {
+                "description": "The interval (in seconds) for the fixFingers process.",
+                "name": "fixFingers",
+                "optional": true,
+                "type": "number"
+              },
+              {
+                "description": "The interval (in seconds) for the checkPredecesssors process.",
+                "name": "checkPredecessor",
+                "optional": true,
+                "type": "number"
+              },
+              {
+                "name": "fixSuccessorList",
+                "optional": true,
+                "description": "The interval (in seconds) for the fixSuccessorList process.",
+                "type": "number"
+              },
+              {
+                "description": "The interval (in seconds) for the fixSuccessors process.",
+                "name": "fixSuccessor",
+                "optional": true,
+                "type": "number"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "bubblehash.join",
+    "type": "method",
+    "snippet": "var dataConnection = bubblehash.join(id);",
+    "description": "Connects to the remote peer at <code>id</code>."
+  },
+  {
+    "name": "bubblehash.on",
+    "type": "method",
+    "snippet": "bubblehash.on(event, callback);",
+    "description": "Set listeners for BubbleHash events.",
+    "children": [
+      {
+        "name": "message",
+        "type": "event",
+        "snippet": "peer.on(\"message\", function () {/*...*/});",
+        "description": "Emitted when BubbleHash receives a message intended for the client."
+      },
+      {
+        "name": "empty",
+        "type": "event",
+        "snippet": "peer.on(\"empty\", function () {/*...*/});",
+        "description": "Emitted when BubbleHash has no successor or predecessor defined and no entries in its finger table."
+      }
+    ]
+  },
+  {
+    "name": "bubblehash.destroy",
+    "type": "method",
+    "snippet": "bubblehash.destroy();",
+    "description": "Destroys the underlying peer connection and stops all BubbleHash periodic processes. "
+  }
+]

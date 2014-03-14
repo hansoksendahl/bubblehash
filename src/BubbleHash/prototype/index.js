@@ -8,21 +8,13 @@ import "bindDataConnection.js";
 
 import "log.js";
 
-// import "onNotify.js";
+import "onNotify.js";
 
 import "onFindSuccessor.js";
 
-// import "onFoundSuccessor";
+import "onFindPredecessor.js";
 
-// import "onFindPredecessor.js";
-
-// // import "onFoundPredecessor";
-
-// import "onGetSuccessorList.js";
-
-// // import "onGotSuccessorList";
-
-// import "onMessage.js";
+import "onGetSuccessorList.js";
 
 import "closestPrecedingNode.js";
 
@@ -30,8 +22,12 @@ import "buildFingers.js";
 
 import "fixFingers.js";
 
-import "stabilization.js";
+import "stabilize.js";
 
-// import "checkPredecessor.js";
+import "checkPredecessor.js";
 
-// import "fixSuccessorList.js";
+import "fixSuccessorList.js";
+
+import "fixSuccessor.js";
+
+import "destroy.js";

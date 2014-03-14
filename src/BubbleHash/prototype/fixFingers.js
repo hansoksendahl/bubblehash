@@ -11,7 +11,9 @@ BubbleHash.prototype.fixFingers = function fixFingers (interval) {
     self = this;
     
     this.processes.fixFingers = setInterval(function () {
-      self.buildFingers(self.self);
+      if (self.successor !== self.self) {
+        self.buildFingers(self.self);
+      }
     }, interval * 1000);
   }
 }

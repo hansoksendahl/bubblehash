@@ -17,18 +17,24 @@ BubbleHash.prototype.join = function join (id, options) {
   
   dataConnection.once("open", function () {
     // Message the peer specified by `id` to find its successor
-    self.log("Finding successor of "+dataConnection.peer+".");
+    self.log("findSuccessor", { node: dataConnection.hash });
+    
     dataConnection.send({
       type: self.types.FIND_SUCCESSOR,
       hash: self.self.hash,
-      peer: self.self.peer
+      peer: self.self.peer,
+      empty: true
     });
     
     // On response set the successor and build the finger table
     dataConnection.once("dataFoundSuccessor", function (dataConnection, data) {
-      self.log("The successor of "+dataConnection.peer+" is "+data.peer+".");
-      self.successor = self.connect(data.peer);
-      self.buildFingers(self.successor);
+      self.log("foundSuccessor", { node: dataConnection.hash, successor: data.hash });
+      
+      var successor = self.connect(data.peer);
+      successor.once("open", function () {
+        self.successor = successor;
+        self.buildFingers(successor);
+      });
     });
   });
     

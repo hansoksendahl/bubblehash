@@ -5,8 +5,8 @@ util.equalTo = function (h_1, h_2) {
   var i;
   
   for (i = h_1.length - 1; i >= 0; i -= 1) {
-    if (h_1[i] == h_2[i]) return true;
+    if (h_1[i] !== h_2[i]) return false;
   }
   
-  return false;
+  return true;
 };

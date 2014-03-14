@@ -1,16 +1,17 @@
 // search finger table for the highest predecessor of x
 //
-//     for i := m - 1 downto 1
-//       if (finger[i] ∈ (n, x))
-//         return finger[i];
-//       return n;
+//     n.closentPrecedingNode(x)
+//       for i := m - 1 downto 1
+//         if (finger[i] ∈ (n, x))
+//           return finger[i];
+//         return n;
 BubbleHash.prototype.closestPrecedingNode = function closestPrecedingNode (x) {
   var i
     , finger;
   
-  this.log("Looking for closest preceding node of "+x.join("")+".");
+  this.log("Looking for closest preceding node of "+util.hashHex(x)+".");
   
-  for (i = 128 - 1; i >= 1; i -= 1) {
+  for (i = this.fingers.length - 1; i >= 1; i -= 1) {
     finger = this.fingers[i];
     
     if (finger) {

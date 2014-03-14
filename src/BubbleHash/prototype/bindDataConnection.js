@@ -2,11 +2,9 @@ BubbleHash.prototype.bindDataConnection = function bindDataConnection (dataConne
   var self = this;
   
   dataConnection.on("data", function (data) {
-    console.log(data);
-    
     switch (data.type) {
       case self.types.NOTIFY:
-        this.emit("dataNotify", dataConnection, data)
+        this.emit("dataNotify", dataConnection, data);
         break;
       case self.types.FIND_SUCCESSOR:
         this.emit("dataFindSuccessor", dataConnection, data);
@@ -27,7 +25,7 @@ BubbleHash.prototype.bindDataConnection = function bindDataConnection (dataConne
         this.emit("dataGotSuccessorList", dataConnection, data);
         break;
       case self.types.MESSAGE:
-        self.emit("dataMessage", data.message);
+        self.emit("message", data.message);
         break;
       default:
         this.emit("error", new Error("Unrecognized message type."))
@@ -43,25 +41,13 @@ BubbleHash.prototype.bindDataConnection = function bindDataConnection (dataConne
     self.onFindSuccessor(dataConnection, data);
   });
   
-  // dataConnection.on("dataFoundSuccessor", function (dataConnection, data) {
-  //   self.onFoundSuccessor(dataConnection, data);
-  // });
-  
   dataConnection.on("dataFindPredecessor", function (dataConnection, data) {
     self.onFindPredecessor(dataConnection, data);
   });
   
-  // dataConnection.on("dataFoundPredecessor", function (dataConnection, data) {
-  //   self.onFoundPredecessor(dataConnection, data);
-  // });
-  
   dataConnection.on("dataGetSuccessorList", function (dataConnection, data) {
     self.onGetSuccessorList(dataConnection, data);
   });
-  
-  // dataConnection.on("dataGotSuccessorList", function (dataConnection, data) {
-  //   self.onGotSuccessorList(dataConnection, data);
-  // });
   
   dataConnection.on("dataMessage", function (dataConnection, data) {
     self.onMessage(dataConnection, data);

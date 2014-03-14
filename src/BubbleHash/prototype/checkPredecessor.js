@@ -1,7 +1,8 @@
 // periodically check whecher predecessor has failed
 //
-//     if (predecessor has failed)
-//       predecssor := nil;
+//     n.checkPredecessor()
+//       if (predecessor.open = false)
+//         predecessor := nil;
 BubbleHash.prototype.checkPredecessor = function checkPredecessor (interval) {
   var self;
   

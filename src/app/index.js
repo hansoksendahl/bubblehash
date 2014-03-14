@@ -28,7 +28,7 @@ import "manifestGet.js"
 
   bubblehash = new BubbleHash(bubblehashOptions);
   
-  bubblehash.peer.once("open", function () {
+  bubblehash.peer.on("open", function () {
     notify("success", "socket");
     updateStatus("connecting");
     peerOpen();
@@ -38,10 +38,6 @@ import "manifestGet.js"
     notify("success", "recvConnection");
     updateStatus("on");
   });
-  
-  // bubblehash.on("error", function (err) {
-  //   console.error(err);
-  // });
   
   exports.bubblehash = bubblehash;
   

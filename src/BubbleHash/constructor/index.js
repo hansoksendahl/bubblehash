@@ -20,6 +20,8 @@
 //   * checkPredecessor - interval (in seconds) for bubblehash.checkPredecessor
 //   * fixSuccessorList - interval (in seconds) for bubbelhash.fixSuccessorList
 function BubbleHash (id, options) {
+  EventEmitter.call(this);
+  
   if (arguments.length === 1) {
     options = id;
     id = void(0);
@@ -33,7 +35,7 @@ function BubbleHash (id, options) {
   this.peer = new Peer(id, options.peer);
   this.self = null;
   this.predecessor = null;
-  this.successor = this.self;
+  this.successor = null;
   this.fingers = [];
   this.successorList = [];
   this.processes = {};
@@ -44,20 +46,65 @@ function BubbleHash (id, options) {
     dataConnection.hash = util.hash(dataConnection.peer);
   });
   
-  // The Ouroboros - the peer first connects to itself since some of the
-  // stabilization routines require a dataConnection to communicate across.
-  //
-  // This is perhaps a less than optimal solution but it will only arise
-  // when the client has no other peers to connect to.
-  this.peer.on("open", function (id) {
-    self.self = self.join(id);
-    self.self.hash = util.hash(id);
-    self.successor = self.self;
+  this.peer.on("error", function () {
+    var peer
+      , i
+      , dataConnection;
+    
+    // Perform aggressive pruning of peer.js connections Fire the close event
+    // on any failed connections.
+    for (peer in this.connections) {
+      this.connections[peer] = this.connections[peer].filter(function (dc) {
+        if (dc.open === false) {
+          dc.emit("error");
+          dc.close();
+        }
+        return dc.open;
+      });
+      
+      if (this.connections[peer].length === 0) {
+        delete this.connections[peer];
+      }
+    }
+    
+    // Empty event emitter
+    if (
+      ! (bubblehash.fingers.some(function (f) { return f.open })) &&
+      (! self.successor || self.successor.open === false) &&
+      (! self.predecessor || self.predecessor.open === false)
+    ) {
+      self.emit("empty");
+    }
+  });
+  
+  // The Ouroboros - a pseudo data connection which ties into the BubbleHash
+  // data connection event listeners
+  this.peer.once("open", function (id) {
+    self.self = (function () {
+      function Ouroboros () {
+        EventEmitter.call(this);
+        
+        this.peer = id;
+        this.hash = util.hash(id);
+        self.bindDataConnection(this);
+      }
+      
+      util.inherits(Ouroboros, EventEmitter);
+      
+      Ouroboros.prototype.send = function send (data) {
+        this.emit("data", data);
+      };
+      
+      return new Ouroboros();
+    }());
     
     // Start processes
     self.fixFingers(options.interval.fixFingers || 10);
-    // self.stabilization(options.interval.stabilization || 10);
-    // self.checkPredecessor(options.interval.checkPredecessor || 10);
-    // self.fixSuccessorList(options.interval.fixSuccessorList || 10);
+    self.stabilize(options.interval.stabilize || 10);
+    self.checkPredecessor(options.interval.checkPredecessor || 10);
+    self.fixSuccessorList(options.interval.fixSuccessorList || 10);
+    self.fixSuccessor(options.interval.fixSuccessor || 10);
   });
 }
+
+util.inherits(BubbleHash, EventEmitter);

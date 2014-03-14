@@ -27,28 +27,33 @@ util.logMinus = function (h_1, h_2) {
     , encL = 0
     , hex
     , e = 0;
-
-  // Swap if h_1 is less than h₂
+    
+  // If h₁ < h₂ swap h₁ and h₂.
   if (util.lessThan(h_1, h_2)) {
     sub = h_1;
     h_1 = h_2;
     h_2 = sub;
   }
   
-  // Subtract h₂ from h_1
-  sub = 0;
+  // Subtract h₂ from h₁
   for (i = 0; i < h_1.length; i += 1) {
-    sub = Math.abs(h_1[i]) - Math.abs(h_2[i]) + carry;
-    
-    if (sub < 0 && i < h_1.length - 1) {
-      sub = (i < h_1.length - 1 && a[i + 1] > 0) ? 0x100000000 - sub : 0;
-      carry = -1;
+    a[i] = h_1[i] - h_2[i];
+  }
+  
+  for (i = 0; i < h_1.length; i += 1) {
+    a[i] += carry;
+    if (a[i] < 0) {
+      a[i] += 0x100000000;
+      if (a.slice(i + 1, a.length).some(function (e) { return e !== 0 })) {
+        carry = -1;
+      }
+      else {
+        carry = 0;
+      }
     }
     else {
       carry = 0;
     }
-    
-    a[i] = sub;
   }
   
   // Capture a buffer of hexadecimal characters and calculate the exponent.
@@ -70,7 +75,7 @@ util.logMinus = function (h_1, h_2) {
       // Calculate the exponent which the buffer would need to be raised to
       // to equal the originating value for a keyspace broken into 32 bit
       // chunks.
-      e = Math.floor(((32 * enc) + 4 * encL) * Math.LN2 / Math.LN10);
+      e = Math.round(((32 * enc)) * (Math.LN2 / Math.LN10));
       break;
     }
   }
@@ -88,5 +93,5 @@ util.logMinus = function (h_1, h_2) {
   sub = Number(""+buffer+"e"+e);
   
   // Return the log₂ value of the exponential number descibed by `sub`
-  return Math.round(Math.log(sub || 1) / Math.LN2) || 0
+  return Math.floor(Math.log(sub || 1) / Math.LN2) || 0;
 };
