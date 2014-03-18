@@ -128,7 +128,7 @@
     "name": "bubblehash.join",
     "type": "method",
     "snippet": "var dataConnection = bubblehash.join(id);",
-    "description": "Connects to the remote peer at <code>id</code>."
+    "description": "Connects to the remote peer at <code>id</code>. For more information on the events and methods attached to the dataConnection object please see the <a href=\"http://peerjs.com/docs/#dataconnection\">peer.js</a> documentation."
   },
   {
     "name": "bubblehash.on",
@@ -139,13 +139,13 @@
       {
         "name": "message",
         "type": "event",
-        "snippet": "peer.on(\"message\", function () {/*...*/});",
+        "snippet": "bubblehash.on(\"message\", function () {/*...*/});",
         "description": "Emitted when BubbleHash receives a message intended for the client."
       },
       {
         "name": "empty",
         "type": "event",
-        "snippet": "peer.on(\"empty\", function () {/*...*/});",
+        "snippet": "bubblehash.on(\"empty\", function () {/*...*/});",
         "description": "Emitted when BubbleHash has no successor or predecessor defined and no entries in its finger table."
       }
     ]
@@ -155,5 +155,25 @@
     "type": "method",
     "snippet": "bubblehash.destroy();",
     "description": "Destroys the underlying peer connection and stops all BubbleHash periodic processes. "
+  },
+  {
+    "name": "bubblehash.lookup",
+    "type": "method",
+    "snippet": "bubblehash.lookup(key, [value])",
+    "description": "Looks up and optionally sets the value of a given `key`.",
+    "children": [
+      {
+        "name": "key",
+        "optional": false,
+        "type": "string",
+        "description": "A string descriptor corresponding to a particular value."
+      },
+      {
+        "name": "value",
+        "optional": true,
+        "type": "string object array number boolean",
+        "description": "The value corresponding to `key` it can be any serializable Javascript data type."
+      }
+    ]
   }
 ]

@@ -18,7 +18,11 @@ import "xhr/";
 
 import "peerOpen.js";
 
-import "manifestGet.js"
+import "manifestGet.js";
+
+import "dbConnection.js";
+
+import "searchSubmit.js";
 
   // Bind some generic UI events.
   (function () {
@@ -27,6 +31,24 @@ import "manifestGet.js"
   }());
 
   bubblehash = new BubbleHash(bubblehashOptions);
+  
+  // Make the search button fire the submit event.
+  cache.searchBtn.on("click", function () {
+    $(this).closest("form").trigger("submit")
+  });
+  
+  cache.search.on("submit", function () {
+    searchSubmit();
+    
+    // Prevent default
+    return false;
+  });
+  
+  (function () {
+    var hashTags = ["#test", "#awesome", "#sandbox"];
+    
+    cache.searchQuery.attr("placeholder", hashTags[Math.floor(Math.random() * hashTags.length)]);
+  }());
   
   bubblehash.peer.on("open", function () {
     notify("success", "socket");
@@ -39,6 +61,7 @@ import "manifestGet.js"
     updateStatus("on");
   });
   
+  exports.queries = queries;
   exports.bubblehash = bubblehash;
   
   notify("info", "welcome");

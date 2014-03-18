@@ -32,6 +32,7 @@ function BubbleHash (id, options) {
   
   var self = this;
   
+  this.running = false;
   this.peer = new Peer(id, options.peer);
   this.self = null;
   this.predecessor = null;
@@ -41,9 +42,15 @@ function BubbleHash (id, options) {
   this.processes = {};
   this.options = options;
   
+  // Indicate that the choord protocol is running.
+  this.on("chord", function () {
+    self.running = true;
+  });
+  
   this.peer.on("connection", function (dataConnection) {
     self.bindDataConnection(dataConnection);
     dataConnection.hash = util.hash(dataConnection.peer);
+    self.emit("chord");
   });
   
   this.peer.on("error", function () {

@@ -2,3 +2,4 @@ exports.RTCSessionDescription = window.mozRTCSessionDescription || window.RTCSes
 exports.RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection || window.RTCPeerConnection;
 exports.RTCIceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
 exports.BubbleHash = BubbleHash;
+exports.util = util;

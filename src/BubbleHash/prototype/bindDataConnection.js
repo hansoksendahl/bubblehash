@@ -1,6 +1,10 @@
 BubbleHash.prototype.bindDataConnection = function bindDataConnection (dataConnection) {
   var self = this;
   
+  dataConnection.on("open", function () {
+    self.emit("chord");
+  });
+  
   dataConnection.on("data", function (data) {
     switch (data.type) {
       case self.types.NOTIFY:

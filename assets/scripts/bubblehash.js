@@ -730,12 +730,12 @@
         }
     };
 
-    // notify s to be s's predecessor
+    // n notifies s to be s's predecessor
     //
     // Pseudocode:
     //
     //     s.notify(n)
-    //       if (predecssor = nil or n ∈ (predecssor, s))
+    //       if (predecessor = nil or n ∈ (predecessor, s))
     //         predecessor := n;
     BubbleHash.prototype.onNotify = function onNotify(dataChannel, data) {
         var self = this,
@@ -866,10 +866,11 @@
 
     // search finger table for the highest predecessor of x
     //
-    //     for i := m - 1 downto 1
-    //       if (finger[i] ∈ (n, x))
-    //         return finger[i];
-    //       return n;
+    //     n.closentPrecedingNode(x)
+    //       for i := m - 1 downto 1
+    //         if (finger[i] ∈ (n, x))
+    //           return finger[i];
+    //         return n;
     BubbleHash.prototype.closestPrecedingNode = function closestPrecedingNode(x) {
         var i, finger;
 
@@ -950,7 +951,7 @@
     //
     //     n.stabilize()
     //       checkPredecessor();
-    //       x := successor.prdecessor;
+    //       x := successor.predecessor;
     //       if (x ∈ (n, successor))
     //         successor := x;
     //       successor.notify(n);
@@ -1020,8 +1021,9 @@
 
     // periodically check whecher predecessor has failed
     //
-    //     if (predecessor has failed)
-    //       predecssor := nil;
+    //     n.checkPredecessor()
+    //       if (predecessor.open = false)
+    //         predecessor := nil;
     BubbleHash.prototype.checkPredecessor = function checkPredecessor(interval) {
         var self;
 
@@ -1040,7 +1042,7 @@
     //
     // Pseudocode:
     //     n.fixSuccessorList()
-    //       ⟨s₁,…,sᵣ⟩ := successor.successorList
+    //       ⟨s₁,…,sᵣ⟩ := successor.successorList;
     //       successorList := ⟨successor,s₁,…,sᵣ₋₁⟩;
     BubbleHash.prototype.fixSuccessorList = function fixSuccessorList(interval) {
         var self;
@@ -1066,6 +1068,11 @@
         }
     };
 
+    // periodically update failed successor
+    //
+    //     n.fixSuccessor()
+    //       if (successor.open = false)
+    //         successor := smallest alive node in successorList
     BubbleHash.prototype.fixSuccessor = function(interval) {
         var self = this;
 
@@ -1113,4 +1120,5 @@
     exports.RTCPeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection || window.RTCPeerConnection;
     exports.RTCIceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
     exports.BubbleHash = BubbleHash;
+    exports.util = util;
 })(this);
