@@ -197,10 +197,10 @@
 
             // Toggle form fields
             if (status === "on") {
-                cache.search.removeAttr("disabled");
+                cache.searchBtn.removeAttr("disabled");
                 cache.searchQuery.removeAttr("disabled");
             } else {
-                cache.search.attr("disabled", "disabled");
+                cache.searchBtn.attr("disabled", "disabled");
                 cache.searchQuery.attr("disabled", "disabled");
             }
         };
@@ -270,12 +270,15 @@
         // errors to the Data Connection object.
         function retry() {
             data.manifest = data.manifest.slice(1);
-            updateStatus("connecting");
 
             if (data.manifest.length > 0) {
-                notify("info", "searching");
-                initialConnection();
-            } else {
+                if (bubblehash.running === false) {
+                    updateStatus("connecting");
+                    notify("info", "searching");
+                    initialConnection();
+                }
+            } else if (bubblehash.running === false) {
+                updateStatus("connecting");
                 peerOpen();
             }
         }
@@ -283,19 +286,12 @@
         function initialConnection() {
             var dataConnection = bubblehash.join(data.manifest[0]);
 
-            dataConnection.once("error", retry);
+            // Retry if the data connection fails.
+            bubblehash.peer.once("error", retry);
 
+            // If the data connection opens stop listening for retry messages.
             dataConnection.once("open", function() {
-                bubblehash.peer.removeListener("error", retry);
-                dataConnection.removeListener("close", retry);
-
-                bubblehash.once("empty", function() {
-                    updateStatus("connecting");
-                    peerOpen();
-                });
-
-                updateStatus("on");
-                notify("success", "connection");
+                dataConnection.removeListener("error", retry);
             });
         }
 
@@ -333,28 +329,39 @@
         });
 
         out.read = function(key, callback) {
-            store.bubbles.query()
+            var transaction = store.bubbles.query()
                 .filter("hash", murmurHash3.x86.hash128(key))
-                .execute()
-                .done(callback);
+                .execute();
+
+            if (arguments.length > 1) {
+                transaction.done(callback);
+            }
         };
 
         out.create = function(key, value, callback) {
-            store.bubbles.add({
+            var transaction = store.bubbles.add({
                 hash: murmurHash3.x86.hash128(key),
                 created: new Date().getTime(),
                 modified: new Date().getTime(),
                 value: value
-            }).done(callback);
+            });
+
+            if (arguments.length > 1) {
+                transaction.done(callback);
+            }
         };
 
         out.update = function(key, value, callback) {
-            store.bubbles.update({
+            var transaction = store.bubbles.update({
                 hash: murmurHash3.x86.hash128(key),
                 created: value.created,
                 modified: new Date().getTime(),
                 value: value.value
             });
+
+            if (arguments.length > 1) {
+                transaction.done(callback);
+            }
         };
 
         // NOTE
@@ -367,127 +374,29 @@
     }());
 
     var searchSubmit = (function() {
-        // Twitter's official hashtag verifier.
+        // Twitter's official hashtag verifier. It's ungodly
+        HASHTAG = /(#|＃)([a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff\u0100-\u024f\u0253-\u0254\u0256-\u0257\u0300-\u036f\u1e00-\u1eff\u0400-\u04ff\u0500-\u0527\u2de0-\u2dff\ua640-\ua69f\u0591-\u05bf\u05c1-\u05c2\u05c4-\u05c5\u05d0-\u05ea\u05f0-\u05f4\ufb12-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb40-\ufb41\ufb43-\ufb44\ufb46-\ufb4f\u0610-\u061a\u0620-\u065f\u066e-\u06d3\u06d5-\u06dc\u06de-\u06e8\u06ea-\u06ef\u06fa-\u06fc\u0750-\u077f\u08a2-\u08ac\u08e4-\u08fe\ufb50-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\u200c-\u200c\u0e01-\u0e3a\u0e40-\u0e4e\u1100-\u11ff\u3130-\u3185\ua960-\ua97f\uac00-\ud7af\ud7b0-\ud7ff\uffa1-\uffdc\u30a1-\u30fa\u30fc-\u30fe\uff66-\uff9f\uff10-\uff19\uff21-\uff3a\uff41-\uff5a\u3041-\u3096\u3099-\u309e\u3400-\u4dbf\u4e00-\u9fff\u20000-\u2a6df\u2a700-\u2b73f\u2b740-\u2b81f\u2f800-\u2fa1f]*[a-z_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff\u0100-\u024f\u0253-\u0254\u0256-\u0257\u0300-\u036f\u1e00-\u1eff\u0400-\u04ff\u0500-\u0527\u2de0-\u2dff\ua640-\ua69f\u0591-\u05bf\u05c1-\u05c2\u05c4-\u05c5\u05d0-\u05ea\u05f0-\u05f4\ufb12-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb40-\ufb41\ufb43-\ufb44\ufb46-\ufb4f\u0610-\u061a\u0620-\u065f\u066e-\u06d3\u06d5-\u06dc\u06de-\u06e8\u06ea-\u06ef\u06fa-\u06fc\u0750-\u077f\u08a2-\u08ac\u08e4-\u08fe\ufb50-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\u200c-\u200c\u0e01-\u0e3a\u0e40-\u0e4e\u1100-\u11ff\u3130-\u3185\ua960-\ua97f\uac00-\ud7af\ud7b0-\ud7ff\uffa1-\uffdc\u30a1-\u30fa\u30fc-\u30fe\uff66-\uff9f\uff10-\uff19\uff21-\uff3a\uff41-\uff5a\u3041-\u3096\u3099-\u309e\u3400-\u4dbf\u4e00-\u9fff\u20000-\u2a6df\u2a700-\u2b73f\u2b740-\u2b81f\u2f800-\u2fa1f][a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff\u0100-\u024f\u0253-\u0254\u0256-\u0257\u0300-\u036f\u1e00-\u1eff\u0400-\u04ff\u0500-\u0527\u2de0-\u2dff\ua640-\ua69f\u0591-\u05bf\u05c1-\u05c2\u05c4-\u05c5\u05d0-\u05ea\u05f0-\u05f4\ufb12-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb40-\ufb41\ufb43-\ufb44\ufb46-\ufb4f\u0610-\u061a\u0620-\u065f\u066e-\u06d3\u06d5-\u06dc\u06de-\u06e8\u06ea-\u06ef\u06fa-\u06fc\u0750-\u077f\u08a2-\u08ac\u08e4-\u08fe\ufb50-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\u200c-\u200c\u0e01-\u0e3a\u0e40-\u0e4e\u1100-\u11ff\u3130-\u3185\ua960-\ua97f\uac00-\ud7af\ud7b0-\ud7ff\uffa1-\uffdc\u30a1-\u30fa\u30fc-\u30fe\uff66-\uff9f\uff10-\uff19\uff21-\uff3a\uff41-\uff5a\u3041-\u3096\u3099-\u309e\u3400-\u4dbf\u4e00-\u9fff\u20000-\u2a6df\u2a700-\u2b73f\u2b740-\u2b81f\u2f800-\u2fa1f]*)/ig;
 
-        // Creates a Unicode Regular Expression range
-        function regexRange(from, to) {
-            to = to || 0;
+        return function(callback) {
+            // NOTE
+            // Since we reuse the `HASHTAG` regular expression we need to reset the
+            // search index.
+            HASHTAG.lastIndex = 0;
 
-            from = from.toString(16);
-            fromLen = (from.length > 4) ? from.length : 4;
-            to = to.toString(16);
-            toLen = (to.length > 4) ? to.length : 4;
-
-            if (to !== "0") {
-                return "\\u" + ("0000" + from).slice(-fromLen) + "-\\u" + ("0000" + to).slice(-toLen) + "";
-            } else {
-                "\\u{" + ("0000" + from).slice(-fromLen) + "}";
-            }
-        }
-
-        LATIN_ACCENTS = [
-            regexRange(0xc0, 0xd6),
-            regexRange(0xd8, 0xf6),
-            regexRange(0xf8, 0xff),
-            regexRange(0x0100, 0x024f),
-            regexRange(0x0253, 0x0254),
-            regexRange(0x0256, 0x0257),
-            regexRange(0x0259),
-            regexRange(0x025b),
-            regexRange(0x0263),
-            regexRange(0x0268),
-            regexRange(0x026f),
-            regexRange(0x0272),
-            regexRange(0x0289),
-            regexRange(0x028b),
-            regexRange(0x02bb),
-            regexRange(0x0300, 0x036f),
-            regexRange(0x1e00, 0x1eff)
-        ].join("")
-
-        NON_LATIN_HASHTAG_CHARS = [
-            // Cyrillic (Russian, Ukrainian, etc.)
-            regexRange(0x0400, 0x04ff), // Cyrillic
-            regexRange(0x0500, 0x0527), // Cyrillic Supplement
-            regexRange(0x2de0, 0x2dff), // Cyrillic Extended A
-            regexRange(0xa640, 0xa69f), // Cyrillic Extended B
-            regexRange(0x0591, 0x05bf), // Hebrew
-            regexRange(0x05c1, 0x05c2),
-            regexRange(0x05c4, 0x05c5),
-            regexRange(0x05c7),
-            regexRange(0x05d0, 0x05ea),
-            regexRange(0x05f0, 0x05f4),
-            regexRange(0xfb12, 0xfb28), // Hebrew Presentation Forms
-            regexRange(0xfb2a, 0xfb36),
-            regexRange(0xfb38, 0xfb3c),
-            regexRange(0xfb3e),
-            regexRange(0xfb40, 0xfb41),
-            regexRange(0xfb43, 0xfb44),
-            regexRange(0xfb46, 0xfb4f),
-            regexRange(0x0610, 0x061a), // Arabic
-            regexRange(0x0620, 0x065f),
-            regexRange(0x066e, 0x06d3),
-            regexRange(0x06d5, 0x06dc),
-            regexRange(0x06de, 0x06e8),
-            regexRange(0x06ea, 0x06ef),
-            regexRange(0x06fa, 0x06fc),
-            regexRange(0x06ff),
-            regexRange(0x0750, 0x077f), // Arabic Supplement
-            regexRange(0x08a0), // Arabic Extended A
-            regexRange(0x08a2, 0x08ac),
-            regexRange(0x08e4, 0x08fe),
-            regexRange(0xfb50, 0xfbb1), // Arabic Pres. Forms A
-            regexRange(0xfbd3, 0xfd3d),
-            regexRange(0xfd50, 0xfd8f),
-            regexRange(0xfd92, 0xfdc7),
-            regexRange(0xfdf0, 0xfdfb),
-            regexRange(0xfe70, 0xfe74), // Arabic Pres. Forms B
-            regexRange(0xfe76, 0xfefc),
-            regexRange(0x200c, 0x200c), // Zero-Width Non-Joiner
-            regexRange(0x0e01, 0x0e3a), // Thai
-            regexRange(0x0e40, 0x0e4e), // Hangul (Korean)
-            regexRange(0x1100, 0x11ff), // Hangul Jamo
-            regexRange(0x3130, 0x3185), // Hangul Compatibility Jamo
-            regexRange(0xA960, 0xA97F), // Hangul Jamo Extended-A
-            regexRange(0xAC00, 0xD7AF), // Hangul Syllables
-            regexRange(0xD7B0, 0xD7FF), // Hangul Jamo Extended-B
-            regexRange(0xFFA1, 0xFFDC) // Half-width Hangul
-        ].join("");
-
-        CJ_HASHTAG_CHARACTERS = [
-            regexRange(0x30A1, 0x30FA), regexRange(0x30FC, 0x30FE), // Katakana (full-width)
-            regexRange(0xFF66, 0xFF9F), // Katakana (half-width)
-            regexRange(0xFF10, 0xFF19), regexRange(0xFF21, 0xFF3A), regexRange(0xFF41, 0xFF5A), // Latin (full-width)
-            regexRange(0x3041, 0x3096), regexRange(0x3099, 0x309E), // Hiragana
-            regexRange(0x3400, 0x4DBF), // Kanji (CJK Extension A)
-            regexRange(0x4E00, 0x9FFF), // Kanji (Unified)
-            regexRange(0x20000, 0x2A6DF), // Kanji (CJK Extension B)
-            regexRange(0x2A700, 0x2B73F), // Kanji (CJK Extension C)
-            regexRange(0x2B740, 0x2B81F), // Kanji (CJK Extension D)
-            regexRange(0x2F800, 0x2FA1F), regexRange(0x3003), regexRange(0x3005), regexRange(0x303B) // Kanji (CJK supplement)
-        ].join("");
-
-        // A hashtag must contain latin characters, numbers and underscores, but not all numbers.
-        HASHTAG_ALPHA = "[a-z_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
-        HASHTAG_ALPHANUMERIC = "[a-z0-9_" + LATIN_ACCENTS + NON_LATIN_HASHTAG_CHARS + CJ_HASHTAG_CHARACTERS + "]";
-
-        HASHTAG = new RegExp("(#|＃)(" + HASHTAG_ALPHANUMERIC + "*" + HASHTAG_ALPHA + HASHTAG_ALPHANUMERIC + "*)", "i");
-
-        return function() {
             var val = cache.searchQuery.val(),
                 tags = [],
                 match;
 
-            if (HASHTAG.test(val)) {
-                match = HASHTAG.exec(val);
-
-                if (match !== null) {
-                    cache.search.data("hashtag", match[1]);
-                }
+            if ((match = HASHTAG.exec(val)) !== null) {
+                queries.read(match[2], function(results) {
+                    callback(results.map(function(row) {
+                        return row.value
+                    }));
+                });
             } else {
                 notify("danger", "OMG! Invalid hashtag.")
             }
-        }
+        };
     }());
 
 
@@ -504,8 +413,71 @@
         $(this).closest("form").trigger("submit")
     });
 
+    cache.addColumnBtn.on("click", function() {
+        var columnNum = cache.tableColumns.find("th").length + 1;
+
+        cache.tableColumns.append($("<th>").append("<input type=\"text\">"));
+
+        cache.tableRows.find("tr").each(function() {
+            var row = $(this),
+                cellNum = row.find("td").length,
+                i;
+
+            if (cellNum < columnNum) {
+                for (i = cellNum; i < columnNum; i += 1) {
+                    row.append($("<td>").append("<input type=\"text\">"));
+                }
+            }
+        })
+    });
+
+    cache.addRowBtn.on("click", function() {
+        var cellNum = cache.tableColumns.find("th").length,
+            row = $("<tr>"),
+            i;
+
+        cellNum = cellNum || 1;
+
+        for (i = 0; i < cellNum; i += 1) {
+            row.append($("<td>").append("<input type=\"text\">"));
+        }
+
+        cache.tableRows.append(row);
+    });
+
     cache.search.on("submit", function() {
-        searchSubmit();
+        var results = searchSubmit(function(results) {
+            // Empty the table
+            cache.tableColumns.empty();
+            cache.tableRows.empty();
+
+            // Create the table
+            var data = apTable(results);
+
+            data[0].forEach(function(column) {
+                cache.tableColumns.append($("<th>").text(column));
+            });
+
+            data[1].forEach(function(entry) {
+                var row = $("<tr>"),
+                    i, column, cell;
+
+                for (i = 0; i < data[0].length; i += 1) {
+                    column = data[0][i];
+                    cell = $("<td>");
+
+                    if (entry[column] !== void(0)) {
+                        cell.text(entry[column]);
+                    }
+
+                    row.append(cell);
+                }
+
+                cache.tableRows.append(row);
+            });
+        });
+
+        // console.log(apTable(results));
 
         // Prevent default
         return false;
@@ -523,9 +495,9 @@
         peerOpen();
     });
 
-    bubblehash.peer.once("connection", function() {
-        notify("success", "recvConnection");
+    bubblehash.on("chord", function() {
         updateStatus("on");
+        notify("success", "connection");
     });
 
     exports.queries = queries;

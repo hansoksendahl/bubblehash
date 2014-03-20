@@ -30,13 +30,16 @@ var manifestGet = function () {
   // errors to the Data Connection object.
   function retry () {
     data.manifest = data.manifest.slice(1);
-    updateStatus("connecting");
     
     if (data.manifest.length > 0) {
-      notify("info", "searching");
-      initialConnection();
+      if (bubblehash.running === false) {
+        updateStatus("connecting");
+        notify("info", "searching");
+        initialConnection();
+      }
     }
-    else {
+    else if (bubblehash.running === false) {
+      updateStatus("connecting");
       peerOpen();
     }
   }
@@ -44,19 +47,12 @@ var manifestGet = function () {
   function initialConnection () {
     var dataConnection = bubblehash.join(data.manifest[0]);
     
-    dataConnection.once("error", retry);
+    // Retry if the data connection fails.
+    bubblehash.peer.once("error", retry);
     
+    // If the data connection opens stop listening for retry messages.
     dataConnection.once("open", function () {
-      bubblehash.peer.removeListener("error", retry);
-      dataConnection.removeListener("close", retry);
-      
-      bubblehash.once("empty", function () {
-        updateStatus("connecting");
-        peerOpen();
-      });
-      
-      updateStatus("on");
-      notify("success", "connection");
+      dataConnection.removeListener("error", retry);
     });
   }
   

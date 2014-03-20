@@ -2,7 +2,7 @@ BubbleHash.prototype.bindDataConnection = function bindDataConnection (dataConne
   var self = this;
   
   dataConnection.on("open", function () {
-    self.emit("chord");
+    if (! self.running) { self.emit("chord"); }
   });
   
   dataConnection.on("data", function (data) {

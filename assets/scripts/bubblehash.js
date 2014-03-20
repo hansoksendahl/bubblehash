@@ -491,6 +491,7 @@
 
         var self = this;
 
+        this.running = false;
         this.peer = new Peer(id, options.peer);
         this.self = null;
         this.predecessor = null;
@@ -500,38 +501,23 @@
         this.processes = {};
         this.options = options;
 
+        // Indicate that the chord protocol is running.
+        this.on("chord", function() {
+            self.running = true;
+        });
+
+        // TODO
+        // Indicate that the chord protocol has failed.
+        //
+        // There is not at this time a reliable way to listen for dataConnection
+        // errors due to EXPIRE events sent from the server.
+
+
         this.peer.on("connection", function(dataConnection) {
             self.bindDataConnection(dataConnection);
             dataConnection.hash = util.hash(dataConnection.peer);
-        });
-
-        this.peer.on("error", function() {
-            var peer, i, dataConnection;
-
-            // Perform aggressive pruning of peer.js connections Fire the close event
-            // on any failed connections.
-            for (peer in this.connections) {
-                this.connections[peer] = this.connections[peer].filter(function(dc) {
-                    if (dc.open === false) {
-                        dc.emit("error");
-                        dc.close();
-                    }
-                    return dc.open;
-                });
-
-                if (this.connections[peer].length === 0) {
-                    delete this.connections[peer];
-                }
-            }
-
-            // Empty event emitter
-            if (!(bubblehash.fingers.some(function(f) {
-                    return f.open
-                })) &&
-                (!self.successor || self.successor.open === false) &&
-                (!self.predecessor || self.predecessor.open === false)
-            ) {
-                self.emit("empty");
+            if (!self.running) {
+                self.emit("chord");
             }
         });
 
@@ -655,6 +641,12 @@
 
     BubbleHash.prototype.bindDataConnection = function bindDataConnection(dataConnection) {
         var self = this;
+
+        dataConnection.on("open", function() {
+            if (!self.running) {
+                self.emit("chord");
+            }
+        });
 
         dataConnection.on("data", function(data) {
             switch (data.type) {

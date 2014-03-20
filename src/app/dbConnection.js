@@ -30,28 +30,39 @@ var queries = (function () {
   });
   
   out.read = function (key, callback) {
-    store.bubbles.query()
+    var transaction = store.bubbles.query()
       .filter("hash", murmurHash3.x86.hash128(key))
-      .execute()
-      .done(callback);
+      .execute();
+      
+    if (arguments.length > 1) {
+      transaction.done(callback);
+    }
   };
   
   out.create = function (key, value, callback) {
-    store.bubbles.add({
+    var transaction = store.bubbles.add({
       hash: murmurHash3.x86.hash128(key),
       created: new Date().getTime(),
       modified: new Date().getTime(),
       value: value
-    }).done(callback);
+    });
+    
+    if (arguments.length > 1) {
+      transaction.done(callback);
+    }
   };
   
   out.update = function (key, value, callback) {
-    store.bubbles.update({
+    var transaction = store.bubbles.update({
       hash: murmurHash3.x86.hash128(key),
       created: value.created,
       modified: new Date().getTime(),
       value: value.value
     });
+    
+    if (arguments.length > 1) {
+      transaction.done(callback);
+    }
   };
   
   // NOTE

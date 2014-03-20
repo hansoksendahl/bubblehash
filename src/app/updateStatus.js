@@ -7,11 +7,11 @@ var updateStatus = (function () {
     
     // Toggle form fields
     if (status === "on") {
-      cache.search.removeAttr("disabled");
+      cache.searchBtn.removeAttr("disabled");
       cache.searchQuery.removeAttr("disabled");
     }
     else {
-      cache.search.attr("disabled", "disabled");
+      cache.searchBtn.attr("disabled", "disabled");
       cache.searchQuery.attr("disabled", "disabled");
     }
   };
