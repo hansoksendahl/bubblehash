@@ -207,7 +207,7 @@
     }());
 
     xhr = (function() {
-        var domain = "http://mudb.org",
+        var domain = "http://mudb.herokuapp.com/",
             length = 25,
             key = "ZZZZ",
             out = {}, xhr;
