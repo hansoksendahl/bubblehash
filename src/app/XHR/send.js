@@ -5,7 +5,7 @@ XHR.prototype.send = function send (type, url, callback) {
     , key;
   
   if (this.__data) {
-    queryString = "json="+JSON.stringify(this.__data);
+    queryString = JSON.stringify(this.__data);
     
     if (type === "get") {
       queryIndex = url.indexOf("?");
@@ -25,7 +25,6 @@ XHR.prototype.send = function send (type, url, callback) {
   this.request.onload = callback;
   
   if (type === "post") {
-    this.request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     this.request.send(queryString);
   }
   else {
