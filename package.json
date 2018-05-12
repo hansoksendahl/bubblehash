@@ -8,7 +8,7 @@
   },
   "devDependencies": {
       "smash": "0.0.12",
-      "uglify-js": "2.4.12",
+      "uglify-js": "3.3.24",
       "js-beautify": "1.4.2"
   },
   "scripts": {
