@@ -13,4 +13,3 @@ peer-to-peer connections between connected clients.
 
 The software implements a Chord protocol over which to distribute data stored in
 Javascript Object Notation (JSON).
-
